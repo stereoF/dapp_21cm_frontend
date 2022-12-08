@@ -17,16 +17,21 @@ export default {
   },
   methods:{
     async readFile() {
-      let files = this.$refs.file.files
-      console.log(files)
+      let files = Array.from(this.$refs.file.files)
+      let fileObjectsArray = files.map((file) => {
+        return {
+          path: file.name,
+          content: file
+        }
+      })
       // const ipfs = await IPFS.create()
-      const ipfs = new create('http://127.0.0.1:5001')
+      const ipfs = await new create('http://127.0.0.1:5001')
       const result = []
-      for await (const resultPart of ipfs.addAll(files)) {
+      for await (const resultPart of ipfs.addAll(files, { wrapWithDirectory: true })) {
         result.push(resultPart)
       }
+      // result = await Promise.all(ipfs.addAll(fileObjectsArray), { wrapWithDirectory: true })
       console.log(result)
-      console.log(ipfs.addAll(files))
     }
   }
 }
