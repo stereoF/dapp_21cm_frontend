@@ -6,7 +6,7 @@
     multiple="multiple"
   />
 
-  <el-button type="primary">
+  <el-button type="primary"  @click="upload">
       Upload<el-icon class="el-icon--right"><Upload /></el-icon>
   </el-button>
 
@@ -16,6 +16,7 @@
       {{ file.name }} ({{ file.size | kb }} kb) <button @click="removeFile(file)" title="Remove">X</button>
     </li>
   </ul>
+  <p>The CID of uploaded files: {{cid}}</p>
 </template>
 
 <script>
@@ -24,7 +25,8 @@ import { create } from 'ipfs-http-client'
 export default {
   data() {
     return {
-      files:[]
+      files:[],
+      cid:"",
     }
   },
   methods:{
@@ -45,12 +47,12 @@ export default {
       })
       // const ipfs = await IPFS.create()
       const ipfs = await new create('http://127.0.0.1:5001')
-      const result = []
+      let result = []
       for await (const resultPart of ipfs.addAll(fileObjectsArray, { wrapWithDirectory: true })) {
         result.push(resultPart)
       }
       // result = await Promise.all(ipfs.addAll(fileObjectsArray), { wrapWithDirectory: true })
-      console.log(result)
+      this.cid = result.find(e => e.path==="").cid.toString()
     },
   }
 }
