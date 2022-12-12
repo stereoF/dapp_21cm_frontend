@@ -1,9 +1,9 @@
 <template>
   <input 
-    type="file" 
-    ref="file" 
+    type="file"
     @change="readFile" 
     multiple="multiple"
+    ref="inputFile"
   />
 
   <el-button type="primary"  @click="upload">
@@ -30,8 +30,11 @@ export default {
     }
   },
   methods:{
-    async readFile() {
-      this.files = Array.from(await this.$refs.file.files)
+    async readFile(event) {
+      // this.files = Array.from(await this.$refs.file.files)
+      console.log(event.target.files)
+      this.files = Array.from(await event.target.files)
+      this.$refs.inputFile.value = null;
     },
     removeFile(file){
       this.files = this.files.filter(f => {
