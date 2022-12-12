@@ -23,16 +23,17 @@
 // import * as IPFS from 'ipfs-core'
 import { create } from 'ipfs-http-client'
 export default {
+  name: "FileUpload",
   data() {
     return {
       files:[],
       cid:"",
     }
   },
+  emits: ["cid"],
   methods:{
     async readFile(event) {
       // this.files = Array.from(await this.$refs.file.files)
-      console.log(event.target.files)
       this.files = Array.from(await event.target.files)
       this.$refs.inputFile.value = null;
     },
@@ -56,6 +57,7 @@ export default {
       }
       // result = await Promise.all(ipfs.addAll(fileObjectsArray), { wrapWithDirectory: true })
       this.cid = result.find(e => e.path==="").cid.toString()
+      this.$emit("cid", this.cid)
     },
   }
 }
