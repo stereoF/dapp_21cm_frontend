@@ -20,8 +20,8 @@
 </template>
 
 <script>
-// import * as IPFS from 'ipfs-core'
-import { create } from 'ipfs-http-client'
+import * as IPFS from 'ipfs-core'
+// import { create } from 'ipfs-http-client'
 export default {
   name: "FileUpload",
   data() {
@@ -49,8 +49,8 @@ export default {
           content: file
         }
       })
-      // const ipfs = await IPFS.create()
-      const ipfs = await new create('http://127.0.0.1:5001')
+      const ipfs = await IPFS.create()
+      // const ipfs = await new create('http://127.0.0.1:5001')
       let result = []
       for await (const resultPart of ipfs.addAll(fileObjectsArray, { wrapWithDirectory: true })) {
         result.push(resultPart)
