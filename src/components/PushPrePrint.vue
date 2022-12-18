@@ -1,9 +1,9 @@
 <template>
     <div class="hello">
-      <button id="contractCall" @click="contractCall">Push the Pre-Print CID to contract</button>
       <p>
         The cid need to push: {{cid}}
       </p>
+      <button id="contractCall" @click="contractCall">Push the Pre-Print CID to contract</button>
     </div>
   </template>
   
@@ -24,9 +24,7 @@
             PrePrintArtifact.abi,
             provider
           );
-          const ownerAddress = await prePrint.owner();
-          console.log("The owner of this contract: ", ownerAddress.toString());
-          console.log('The cid need to push: ', this.cid)
+          // console.log('The cid need to push: ', this.cid)
           const PrePrintWithSigner = prePrint.connect(signer);
           await PrePrintWithSigner.submit(this.cid, 'test', 'test')
         },
