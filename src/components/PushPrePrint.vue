@@ -1,6 +1,9 @@
 <template>
     <div class="hello">
-      <button id="contractCall" @click="contractCall">get the contract owner address</button>
+      <button id="contractCall" @click="contractCall">Push the Pre-Print CID to contract</button>
+      <p>
+        The cid need to push: {{cid}}
+      </p>
     </div>
   </template>
   
@@ -10,6 +13,8 @@
     import contractAddress from "../contracts/contract-address.json";
   
     export default {
+      name: "PushPrePrint",
+      props:['cid'],
       methods: {
         contractCall: async function () {
           const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -19,41 +24,10 @@
             provider
           );
           const ownerAddress = await prePrint.owner();
-          console.log(ownerAddress.toString());
+          console.log("The owner of this contract: ", ownerAddress.toString());
+          console.log('The cid need to push: ', this.cid)
         },
-      },
-      name: "PushPrePrint",
-      props: {
-
-      },
-      async mounted() {
-
-      },
+      }
     };
   </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped>
-    h1 {
-      margin-top: 24px;
-    }
-  
-    h3 {
-      margin: 40px 0 0;
-    }
-  
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-  
-    li {
-      display: inline-block;
-      margin: 0 10px;
-    }
-  
-    a {
-      color: #42b983;
-    }
-  </style>
   
