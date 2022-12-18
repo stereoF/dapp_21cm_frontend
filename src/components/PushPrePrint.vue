@@ -18,6 +18,7 @@
       methods: {
         contractCall: async function () {
           const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
           const prePrint = new ethers.Contract(
             contractAddress.PrePrintTrack,
             PrePrintArtifact.abi,
@@ -26,6 +27,8 @@
           const ownerAddress = await prePrint.owner();
           console.log("The owner of this contract: ", ownerAddress.toString());
           console.log('The cid need to push: ', this.cid)
+          const PrePrintWithSigner = prePrint.connect(signer);
+          await PrePrintWithSigner.submit(this.cid, 'test', 'test')
         },
       }
     };
