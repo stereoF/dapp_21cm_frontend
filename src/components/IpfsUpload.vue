@@ -1,86 +1,64 @@
 <template>
-    <div>
-      <h1>{{ status }}</h1>
-      <h2>ID: {{ id }}</h2>
-      <h2>Agent version: {{ agentVersion }}</h2>
-      <h3>Files : {{ fileContents }}</h3>
-  
-      <form>
-        <input
-          class="fileInput"
-          type="file"
-          name="fileInput"
-          ref="fileInput"
-          @change="onFileSelected"
-        />
-  
-        <!-- <button @click="this.refs.selectedFile.click()">Choose File</button> -->
-        <button type="button" @click="saveIPFS">Upload</button>
-  
-        <button type="button" @click="getIPFS">Get IPFS</button> -->
-      </form>
-    </div>
-  </template>
-  
-  <script>
-  import * as IPFS from 'ipfs-core'
-//   import VueIpfs from 'ipfs-core'
-//   const ipfs = VueIpfs.create()
-  var node
-  var file
-  const fileContents = []
-  
-  //  The below code should create an IPFS node to add files to
-  export default {
-    name: 'IpfsInfo',
-    data: function () {
-      return {
-        status: 'Connecting to IPFS...',
-        id: '',
-        agentVersion: '',
-        selectedFile: null,
-        fileContents: this.fileContents,
+  <input 
+    type="file"
+    @change="readFile" 
+    multiple="multiple"
+    ref="inputFile"
+  />
+
+  <el-button type="primary"  @click="upload">
+      Upload<el-icon class="el-icon--right"><Upload /></el-icon>
+  </el-button>
+
+  <h2>Files to Upload</h2>
+  <ul>
+    <li v-for="file in files">
+      {{ file.name }} ({{ file.size | kb }} kb) <button @click="removeFile(file)" title="Remove">X</button>
+    </li>
+  </ul>
+  <p>The CID of uploaded files: {{cid}}</p>
+</template>
+
+<script>
+import * as IPFS from 'ipfs-core'
+// import { create } from 'ipfs-http-client'
+export default {
+  name: "FileUpload",
+  data() {
+    return {
+      files:[],
+      cid:"",
+    }
+  },
+  emits: ["cid"],
+  methods:{
+    async readFile(event) {
+      // this.files = Array.from(await this.$refs.file.files)
+      this.files = Array.from(await event.target.files)
+      this.$refs.inputFile.value = null;
+    },
+    removeFile(file){
+      this.files = this.files.filter(f => {
+        return f != file;
+      });      
+    },
+    async upload() {
+      let fileObjectsArray = this.files.map((file) => {
+        return {
+          path: file.name,
+          content: file
+        }
+      })
+      const ipfs = await IPFS.create()
+      // const ipfs = await new create('http://127.0.0.1:5001')
+      let result = []
+      for await (const resultPart of ipfs.addAll(fileObjectsArray, { wrapWithDirectory: true })) {
+        result.push(resultPart)
       }
-    },
-    mounted: function () {
-      // console.log(VueIpfs)
-    //   this.getIpfsNodeInfo()
-    },
-    methods: {
-      onFileSelected(event) {
-        this.selectedFile = event.target.files[0]
-      },
-  
-      async saveIPFS() {
-        const ipfs = await IPFS.create()
-        const { cid } = await ipfs.add('Hello world')
-        console.info(cid)
-      },
-  
-    //   getIPFS() {
-    //     const resultPart = node.files.ls('/')
-    //     fileContents.push(resultPart)
-    //     //console.log(fileContents)
-    //     return fileContents
-    //   },
-  
-    //   async getIpfsNodeInfo() {
-    //     try {
-    //       // Await for ipfs node instance.
-    //       node = await ipfs
-    //       //console.log(ipfs)
-    //       // Call ipfs `id` method.
-    //       // Returns the identity of the Peer.
-    //       const { agentVersion, id } = await node.id()
-    //       this.agentVersion = agentVersion
-    //       this.id = id
-    //       // Set successful status text.
-    //       this.status = 'Connected to IPFS =)'
-    //     } catch (err) {
-    //       // Set error status text.
-    //       this.status = `Error: ${err}`
-    //     }
-    //   },
+      // result = await Promise.all(ipfs.addAll(fileObjectsArray), { wrapWithDirectory: true })
+      this.cid = result.find(e => e.path==="").cid.toString()
+      this.$emit("cid", this.cid)
     },
   }
-  </script>
+}
+</script>

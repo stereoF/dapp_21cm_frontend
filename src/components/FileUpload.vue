@@ -1,64 +1,56 @@
 <template>
-  <input 
-    type="file"
-    @change="readFile" 
-    multiple="multiple"
-    ref="inputFile"
-  />
-
-  <el-button type="primary"  @click="upload">
-      Upload<el-icon class="el-icon--right"><Upload /></el-icon>
+  <el-upload
+    ref="upload"
+    v-model:file-list="fileList"
+    class="upload-demo"
+    drag
+    action="http://127.0.0.1:8000/uploadfile/"
+    multiple
+    :auto-upload="false"
+  >
+    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+    <div class="el-upload__text">
+      Drop file here or <em>click to upload</em>
+    </div>
+    <template #tip>
+      <div class="el-upload__tip">
+        jpg/png files with a size less than 500kb
+      </div>
+    </template>
+  </el-upload>
+  <el-button class="ml-3" type="success" @click="submitUpload">
+      upload to server
   </el-button>
-
-  <h2>Files to Upload</h2>
-  <ul>
-    <li v-for="file in files">
-      {{ file.name }} ({{ file.size | kb }} kb) <button @click="removeFile(file)" title="Remove">X</button>
-    </li>
-  </ul>
-  <p>The CID of uploaded files: {{cid}}</p>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { UploadFilled } from '@element-plus/icons-vue'
+import type { UploadProps, UploadUserFile,UploadInstance } from 'element-plus'
 import * as IPFS from 'ipfs-core'
-// import { create } from 'ipfs-http-client'
-export default {
-  name: "FileUpload",
-  data() {
-    return {
-      files:[],
-      cid:"",
-    }
-  },
-  emits: ["cid"],
-  methods:{
-    async readFile(event) {
-      // this.files = Array.from(await this.$refs.file.files)
-      this.files = Array.from(await event.target.files)
-      this.$refs.inputFile.value = null;
-    },
-    removeFile(file){
-      this.files = this.files.filter(f => {
-        return f != file;
-      });      
-    },
-    async upload() {
-      let fileObjectsArray = this.files.map((file) => {
+// import $ from 'jquery'
+
+const fileList = ref<UploadUserFile[]>([])
+const upload = ref<UploadInstance>()
+
+const submitUpload = async () => {
+  let fileObjectsArray = fileList.value.map((file) => {
         return {
           path: file.name,
-          content: file
+          content: file.raw
         }
       })
-      const ipfs = await IPFS.create()
-      // const ipfs = await new create('http://127.0.0.1:5001')
-      let result = []
-      for await (const resultPart of ipfs.addAll(fileObjectsArray, { wrapWithDirectory: true })) {
-        result.push(resultPart)
-      }
-      // result = await Promise.all(ipfs.addAll(fileObjectsArray), { wrapWithDirectory: true })
-      this.cid = result.find(e => e.path==="").cid.toString()
-      this.$emit("cid", this.cid)
-    },
-  }
+  // console.log(fileObjectsArray)
+  // const ipfs = await IPFS.create()
+  // let result:any[] = []
+  // for await (const resultPart of ipfs.addAll(fileObjectsArray, { wrapWithDirectory: true })) {
+  //   result.push(resultPart)
+  // }
+  // let cid = result.find(e => e.path==="").cid.toString()
+  // console.log(cid)
+  // console.log(result)
+  upload.value!.submit()
+  // console.log($.get("http://127.0.0.1:8000/"))
 }
+// action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
 </script>
