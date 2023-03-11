@@ -4,6 +4,7 @@
     @change="readFile" 
     multiple="multiple"
     ref="inputFile"
+    webkitdirectory
   />
 
   <el-button type="primary"  @click="upload">
