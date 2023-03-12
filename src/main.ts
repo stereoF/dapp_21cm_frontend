@@ -1,8 +1,10 @@
 import { createApp } from 'vue'
 // import App from './App.vue'
 import App from './AppTestComponents.vue'
-import 'windi.css'
-import './style.css'
+// import uploader from 'vue-simple-uploader'
+// import 'vue-simple-uploader/dist/style.css'
+// import 'windi.css'
+// import './style.css'
 // import router from './router'
 // import { VueDapp } from "vue-dapp"
 // import { ethers } from 'ethers'
@@ -28,5 +30,6 @@ const app = createApp(App)
 //   })
 app.use(ElementPlus)
 // app.use(vuetify)
+// app.use(uploader)
 
 app.mount('#app')

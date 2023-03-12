@@ -3658,6 +3658,15 @@
   "resolved" "https://mirrors.cloud.tencent.com/npm/aws4/-/aws4-1.11.0.tgz"
   "version" "1.11.0"
 
+"axios@^1.3.4":
+  "integrity" "sha512-toYm+Bsyl6VC5wSkfkbbNB6ROv7KY93PEBBL6xyDczaIHasAiv4wPqQ/c4RjoQzipxRD2W5g21cOqQulZ7rHwQ=="
+  "resolved" "https://registry.npmmirror.com/axios/-/axios-1.3.4.tgz"
+  "version" "1.3.4"
+  dependencies:
+    "follow-redirects" "^1.15.0"
+    "form-data" "^4.0.0"
+    "proxy-from-env" "^1.1.0"
+
 "babel-core@^7.0.0-bridge.0":
   "integrity" "sha512-poPX9mZH/5CSanm50Q+1toVci6pv5KSRv/5TWCwtzQS5XEwn40BcCrgIeMFWP9CKKIniKXNxoIOnOq4VVlGXhg=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/babel-core/-/babel-core-7.0.0-bridge.0.tgz"
@@ -5655,6 +5664,11 @@
   "integrity" "sha512-S2HviLR9UyNbt8R+vU6YeQtL8RliPwez9DQEVba5MAvN3Od+RSgKUSL2+qveOMt3owIeBukKoRu2enoOck5uag=="
   "resolved" "https://registry.npmmirror.com/fnv1a/-/fnv1a-1.1.1.tgz"
   "version" "1.1.1"
+
+"follow-redirects@^1.15.0":
+  "integrity" "sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA=="
+  "resolved" "https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.15.2.tgz"
+  "version" "1.15.2"
 
 "for-each@^0.3.3":
   "integrity" "sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw=="
@@ -9145,6 +9159,11 @@
     "protobufjs" "^7.0.0"
     "uint8arraylist" "^2.3.2"
 
+"proxy-from-env@^1.1.0":
+  "integrity" "sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg=="
+  "resolved" "https://registry.npmmirror.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz"
+  "version" "1.1.0"
+
 "prr@~1.0.1":
   "integrity" "sha1-0/wRS6BplaRexok/SEzrHXj19HY="
   "resolved" "https://mirrors.cloud.tencent.com/npm/prr/-/prr-1.0.1.tgz"
@@ -9949,6 +9968,11 @@
   "integrity" "sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/signal-exit/-/signal-exit-3.0.7.tgz"
   "version" "3.0.7"
+
+"simple-uploader.js@^0.6.0":
+  "integrity" "sha512-EXN+o+LD6PVnfzTq/usP8k8yYrI6wKrAx8e+fPcPLVzzttonkyn1KT+Ycx5JnPBSnp6lpiVhNG4JhDJucdPnhA=="
+  "resolved" "https://registry.npmmirror.com/simple-uploader.js/-/simple-uploader.js-0.6.0.tgz"
+  "version" "0.6.0"
 
 "sisteransi@^1.0.5":
   "integrity" "sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg=="
@@ -10877,6 +10901,13 @@
   dependencies:
     "@vue/devtools-api" "^6.1.4"
 
+"vue-simple-uploader@^1.0.1":
+  "integrity" "sha512-upkQeG1eRYO2b5mTdPP1nXohEDk38p9AvR7ao9b8oyIcChUlhnOxS/fs0SDnbkhv2lCYrqx2AGkqoqSKZtgp6g=="
+  "resolved" "https://registry.npmmirror.com/vue-simple-uploader/-/vue-simple-uploader-1.0.1.tgz"
+  "version" "1.0.1"
+  dependencies:
+    "simple-uploader.js" "^0.6.0"
+
 "vue-tsc@^0.40.7":
   "integrity" "sha512-xzuN3g5PnKfJcNrLv4+mAjteMd5wLm5fRhW0034OfNJZY4WhB07vhngea/XeGn7wNYt16r7syonzvW/54dcNiA=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/vue-tsc/-/vue-tsc-0.40.13.tgz"
@@ -10885,7 +10916,7 @@
     "@volar/vue-language-core" "0.40.13"
     "@volar/vue-typescript" "0.40.13"
 
-"vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.1", "vue@^3.2.0", "vue@^3.2.25", "vue@^3.2.38", "vue@3.2.41":
+"vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.1", "vue@^3.2.0", "vue@^3.2.25", "vue@^3.2.38", "vue@>=3.1", "vue@3.2.41":
   "integrity" "sha512-uuuvnrDXEeZ9VUPljgHkqB5IaVO8SxhPpqF2eWOukVrBnRBx2THPSGQBnVRt0GrIG1gvCmFXMGbd7FqcT1ixNQ=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/vue/-/vue-3.2.41.tgz"
   "version" "3.2.41"

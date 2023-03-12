@@ -4,13 +4,13 @@
     v-model:file-list="fileList"
     class="upload-demo"
     drag
-    action="http://127.0.0.1:8000/uploadfile/"
+    action=""
     multiple
     :auto-upload="false"
   >
     <el-icon class="el-icon--upload"><upload-filled /></el-icon>
     <div class="el-upload__text">
-      Drop files here or <em>click to upload files/directory</em>
+      Drop files here or <em>click to upload directory</em>
     </div>
     <!-- <template #tip>
       <div class="el-upload__tip">
@@ -29,6 +29,7 @@ import { UploadFilled } from '@element-plus/icons-vue'
 import type { UploadProps, UploadUserFile,UploadInstance } from 'element-plus'
 import * as IPFS from 'ipfs-core'
 import { onMounted } from 'vue'
+import axios from 'axios'
 
 // const ipfs = await IPFS.create()
 const ipfs = IPFS.create()
@@ -63,6 +64,11 @@ const submitUpload = async () => {
     console.log(error)
   }
   // upload.value!.submit()
+  let formData:any = new FormData();  
+  fileList.value.forEach(file => {formData.append('files', file.raw)}) 
+
+  axios.post("http://127.0.0.1:8000/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
+
 }
 
 </script>
