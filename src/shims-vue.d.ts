@@ -3,4 +3,4 @@ declare module '*.vue' {
     const component: DefineComponent<{}, {}, any>
     export default component
   }
-declare module 'vue-simple-uploader';
+// declare module 'vue-simple-uploader';
