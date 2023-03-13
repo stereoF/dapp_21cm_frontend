@@ -18,13 +18,13 @@
       </div>
     </template> -->
   </el-upload>
-  <el-button class="ml-3" type="success" @click="submitUpload">
+  <el-button class="ml-3" type="success" :disabled="fileListEmpty" @click="submitUpload">
       upload to server
   </el-button>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import type { UploadProps, UploadUserFile,UploadInstance } from 'element-plus'
 import * as IPFS from 'ipfs-core'
@@ -40,6 +40,10 @@ onMounted(() => {
   // console.log(`the component is now mounted.`)
   const inputEle = document.getElementsByClassName("el-upload__input")[0] as HTMLInputElement
   inputEle.webkitdirectory = true
+})
+
+const fileListEmpty = computed(() => {
+  return fileList.value.length > 0 ? false : true
 })
 
 const submitUpload = async () => {
@@ -67,7 +71,8 @@ const submitUpload = async () => {
   fileList.value.forEach(file => {formData.append('files', file.raw)}) 
 
   axios.post("http://127.0.0.1:8000/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
-  upload.value!.submit()
+  // upload.value!.submit()
+  fileList.value = []
 
 }
 
