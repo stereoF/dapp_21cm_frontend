@@ -70,7 +70,8 @@ const submitUpload = async () => {
   let formData:any = new FormData();  
   fileList.value.forEach(file => {formData.append('files', file.raw)}) 
 
-  axios.post("http://127.0.0.1:8000/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
+  let res = await axios.post("http://127.0.0.1:8000/files/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
+  console.log(res)
   // upload.value!.submit()
   fileList.value = []
 
