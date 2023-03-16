@@ -3,30 +3,35 @@
     ref="upload"
     v-model:file-list="fileList"
     class="upload-demo"
-    drag
     action=""
     multiple
     :auto-upload="false"
   >
-    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+    <template #trigger>
+        <el-button type="primary">select file</el-button>
+    </template>
+    <el-button class="ml-3" type="success" :disabled="fileListEmpty" @click="submitUpload">
+        upload to server
+    </el-button>
+    <!-- <el-icon class="el-icon--upload"><upload-filled /></el-icon>
     <div class="el-upload__text">
       Drop files here or <em>click to upload directory</em>
-    </div>
-    <!-- <template #tip>
+    </div> -->
+    <template #tip>
       <div class="el-upload__tip">
-        jpg/png files with a size less than 500kb
+        select the directory/folder contains your materials.
+        <br>A json file named 'meta.json' <em>must</em> be contained.
       </div>
-    </template> -->
+    </template>
   </el-upload>
-  <el-button class="ml-3" type="success" :disabled="fileListEmpty" @click="submitUpload">
-      upload to server
-  </el-button>
+  <div v-if="cidMismatch" class="error-message">
+    Frontend and backend computed different CIDs.
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ref,computed } from 'vue'
-import { UploadFilled } from '@element-plus/icons-vue'
-import type { UploadProps, UploadUserFile,UploadInstance } from 'element-plus'
+import { ref, computed } from 'vue'
+import type { UploadUserFile,UploadInstance } from 'element-plus'
 import * as IPFS from 'ipfs-core'
 import { onMounted } from 'vue'
 import axios from 'axios'
@@ -35,6 +40,14 @@ import axios from 'axios'
 const ipfs = IPFS.create()
 const fileList = ref<UploadUserFile[]>([])
 const upload = ref<UploadInstance>()
+
+const cid = ref('')
+const cid2 = ref('')
+
+const cidMismatch = computed(() => {
+  return cid.value !== cid2.value
+})
+
 
 onMounted(() => {
   // console.log(`the component is now mounted.`)
@@ -50,16 +63,19 @@ const submitUpload = async () => {
   // console.log(fileList.value)
   try {
     let fileObjectsArray = fileList.value.map((file) => {
+      // console.log(file.raw?.webkitRelativePath)
         return {
-          path: file.name,
+          // path: file.name,
+          path: file.raw?.webkitRelativePath,
           content: file.raw
         }
-    })
+    }) as any
   
   // console.log(fileObjectsArray)
     let result:any[] = []
     for await (const resultPart of (await ipfs).addAll(fileObjectsArray, { wrapWithDirectory: true })) {
       result.push(resultPart)
+      // console.log(resultPart.path, resultPart.cid.toString())
     }
     let cid = result.find(e => e.path==="").cid.toString()
     console.log(cid)
@@ -71,10 +87,19 @@ const submitUpload = async () => {
   fileList.value.forEach(file => {formData.append('files', file.raw)}) 
 
   let res = await axios.post("http://127.0.0.1:8000/files/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
-  console.log(res)
+  let cid2 = res.data.cid
+  if (cid.value !== cid2.value) {
+    fileList.value = []
+  }
   // upload.value!.submit()
-  fileList.value = []
 
 }
 
 </script>
+
+
+<style>
+.error-message {
+  color: red;
+}
+</style>
