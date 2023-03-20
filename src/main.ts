@@ -8,7 +8,7 @@ import App from './App.vue'
 // import router from './router'
 // import { VueDapp } from "vue-dapp"
 // import { ethers } from 'ethers'
-import ElementPlus from 'element-plus'
+// import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
 
@@ -28,7 +28,7 @@ const app = createApp(App)
 //       },
 //     },
 //   })
-app.use(ElementPlus)
+// app.use(ElementPlus)
 // app.use(vuetify)
 // app.use(uploader)
 
