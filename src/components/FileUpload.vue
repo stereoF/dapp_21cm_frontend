@@ -48,6 +48,7 @@ const cidMismatch = computed(() => {
   return cid.value !== cid2.value
 })
 
+const emits = defineEmits(['cid-value'])
 
 onMounted(() => {
   // console.log(`the component is now mounted.`)
@@ -61,6 +62,7 @@ const fileListEmpty = computed(() => {
 
 const submitUpload = async () => {
   // console.log(fileList.value)
+  let cid
   try {
     let fileObjectsArray = fileList.value.map((file) => {
       // console.log(file.raw?.webkitRelativePath)
@@ -77,8 +79,8 @@ const submitUpload = async () => {
       result.push(resultPart)
       // console.log(resultPart.path, resultPart.cid.toString())
     }
-    let cid = result.find(e => e.path==="").cid.toString()
-    console.log(cid)
+    cid = result.find(e => e.path==="").cid.toString()
+    // console.log(cid)
     // console.log(result)
   } catch (error) {
     console.log(error)
@@ -88,12 +90,20 @@ const submitUpload = async () => {
 
   let res = await axios.post("http://127.0.0.1:8000/files/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
   let cid2 = res.data.cid
-  if (cid.value !== cid2.value) {
+  if (cid === cid2) {
     fileList.value = []
   }
+  emits('cid-value', cid)
   // upload.value!.submit()
 
 }
+
+// const handleSuccess = (response: any, file: any, fileList: any) => {
+//   console.log(response)
+//   console.log(file)
+//   console.log(fileList)
+//   emits('cid-value', response.cid)
+// }
 
 </script>
 
