@@ -8,7 +8,7 @@
     :auto-upload="false"
   >
     <template #trigger>
-        <el-button type="primary">select file</el-button>
+        <el-button type="primary">select directory</el-button>
     </template>
     <el-button class="ml-3" type="success" :disabled="fileListEmpty" @click="submitUpload">
         upload to server
@@ -20,7 +20,6 @@
     <template #tip>
       <div class="el-upload__tip">
         select the directory/folder contains your materials.
-        <br>A json file named 'meta.json' <em>must</em> be contained.
       </div>
     </template>
   </el-upload>
