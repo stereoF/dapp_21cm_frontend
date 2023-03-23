@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 // import App from './App.vue'
 import App from './App.vue'
+// import { createPinia } from 'pinia'
 // import uploader from 'vue-simple-uploader'
 // import 'vue-simple-uploader/dist/style.css'
 // import 'windi.css'
@@ -13,6 +14,8 @@ import 'element-plus/dist/index.css'
 
 
 const app = createApp(App)
+// const pinia = createPinia()
+// app.use(pinia)
 
 // app.use(router)
 // app.use(VueDapp, {

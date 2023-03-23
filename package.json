@@ -17,6 +17,7 @@
     "ipfs-core": "^0.16.1",
     "ipfs-http-client": "^59.0.0",
     "jquery": "^3.6.4",
+    "pinia": "^2.0.33",
     "vue": "^3.2.38",
     "vue-dapp": "^0.5.8",
     "vue-router": "^4.1.5",

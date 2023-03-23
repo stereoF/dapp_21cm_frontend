@@ -10,18 +10,17 @@
     <template #trigger>
         <el-button type="primary">select directory</el-button>
     </template>
-    <el-button class="ml-3" type="success" :disabled="fileListEmpty" @click="submitUpload">
-        upload to server
-    </el-button>
-    <!-- <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-    <div class="el-upload__text">
-      Drop files here or <em>click to upload directory</em>
-    </div> -->
     <template #tip>
       <div class="el-upload__tip">
         select the directory/folder contains your materials.
       </div>
     </template>
+    <div style="display: flex; align-items: center;">
+      <el-button class="mr-3" type="success" :disabled="fileListEmpty" @click="submitUpload">
+          get the cid
+      </el-button>
+      <el-checkbox v-model="uploadToServer" style="margin-right: 10px;" checked>upload to server</el-checkbox>
+    </div>
   </el-upload>
   <div v-if="cidMismatch" class="error-message">
     Frontend and backend computed different CIDs.
@@ -34,6 +33,9 @@ import type { UploadUserFile,UploadInstance } from 'element-plus'
 import * as IPFS from 'ipfs-core'
 import { onMounted } from 'vue'
 import axios from 'axios'
+import { useUploadStore } from '../store/upload' 
+
+const store = useUploadStore()
 
 // const ipfs = await IPFS.create()
 const ipfs = IPFS.create()
@@ -47,7 +49,7 @@ const cidMismatch = computed(() => {
   return cid.value !== cid2.value
 })
 
-const emits = defineEmits(['cid-value'])
+// const emits = defineEmits(['cid-value'])
 
 onMounted(() => {
   // console.log(`the component is now mounted.`)
@@ -58,6 +60,8 @@ onMounted(() => {
 const fileListEmpty = computed(() => {
   return fileList.value.length > 0 ? false : true
 })
+
+const uploadToServer = ref(false)
 
 const submitUpload = async () => {
   // console.log(fileList.value)
@@ -84,15 +88,21 @@ const submitUpload = async () => {
   } catch (error) {
     console.log(error)
   }
-  let formData:any = new FormData();  
-  fileList.value.forEach(file => {formData.append('files', file.raw)}) 
+  if (uploadToServer.value) {
+    let formData:any = new FormData();  
+    fileList.value.forEach(file => {formData.append('files', file.raw)}) 
 
-  let res = await axios.post("http://127.0.0.1:8000/files/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
-  let cid2 = res.data.cid
-  if (cid === cid2) {
-    fileList.value = []
+    let res = await axios.post("http://127.0.0.1:8000/files/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
+    let cid2 = res.data.cid
+    if (cid === cid2) {
+      fileList.value = []
+    }
   }
-  emits('cid-value', cid)
+  if (!uploadToServer.value) {
+      fileList.value = []
+  }
+  // emits('cid-value', cid)
+  store.setCid(cid)
   // upload.value!.submit()
 
 }

@@ -7,9 +7,11 @@
       <el-main>
         <div class="container">
           <div class="file-upload-container">
-            <FileUpload class="center" @cid-value="cidValue = $event"/>
-            <div v-if="cidValue">CID Value: {{cidValue}}</div>
+            <FileUpload class="center"/>
+            <!-- <FileUpload class="center" @cid-value="cidValue = $event"/> -->
+            <!-- <div v-if="cidValue">CID Value: {{cidValue}}</div> -->
           </div>
+          <MetaInfo/>
         </div>
       </el-main>
     </el-container>
@@ -19,6 +21,7 @@
 <script setup>
 import FileUpload from '../../components/FileUpload.vue'
 import Header from '../../components/Header.vue'
+import MetaInfo from '../../components/MetaInfo.vue'
 import { ref } from 'vue'
 
 const cidValue = ref(null)
