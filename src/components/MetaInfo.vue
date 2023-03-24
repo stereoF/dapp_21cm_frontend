@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUploadStore } from '../store/upload';
 
