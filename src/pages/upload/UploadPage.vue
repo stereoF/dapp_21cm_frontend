@@ -12,7 +12,7 @@
             <!-- <div v-if="cidValue">CID Value: {{cidValue}}</div> -->
           </div>
           <MetaInfo/>
-          <PushPrePrint/>
+          <!-- <PushPrePrint/> -->
           <ContractInfo/>
         </div>
       </el-main>
@@ -24,13 +24,12 @@
 import FileUpload from '../../components/FileUpload.vue'
 import Header from '../../components/Header.vue'
 import MetaInfo from '../../components/MetaInfo.vue'
-import PushPrePrint from '../../components/PushPrePrint.vue'
+// import PushPrePrint from '../../components/PushPrePrint.vue'
 import ContractInfo from '../../components/ContractInfo.vue'
 import { ref } from 'vue'
 
 const cidValue = ref(null)
 
-// check if metamask is connected and get balance from contract
 </script>
 
 <style scoped>

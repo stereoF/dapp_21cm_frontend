@@ -33,12 +33,16 @@
         <textarea id="abstract" v-model="abstract"></textarea>
       </div>
     </form>
+    <button id="contractCall" @click="contractCall">submit</button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { ethers } from "ethers";
+import PrePrintArtifact from "../contracts/PrePrintTrack.json";
+import contractAddress from "../contracts/contract-address.json";
 import { useUploadStore } from '../store/upload';
 
 // const store = useUploadStore();
@@ -59,12 +63,14 @@ export default defineComponent({
   setup() {
     const store = useUploadStore();
     const { cid } = storeToRefs(store);
+    const title = ref('');
+    const abstract = ref('');
     const state = reactive({
       // cid: '',
-      title: '',
+      // title: '',
       authors: [{ name: '', email: '', workplace: '' }],
       fields: [{ field: '' }],
-      abstract: '',
+      // abstract: '',
     });
 
     const addAuthor = (index: number) => {
@@ -87,13 +93,34 @@ export default defineComponent({
       }
     };
 
+    const contractCall = async () => {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
+          const prePrint = new ethers.Contract(
+            contractAddress.PrePrintTrack,
+            PrePrintArtifact.abi,
+            provider
+          );
+          // console.log('The cid need to push: ', this.cid)
+          const PrePrintWithSigner = prePrint.connect(signer);
+          const description = {
+            ...state,
+            'title': title.value,
+            'abstract': abstract.value
+          };
+          await PrePrintWithSigner.submit(cid.value, title.value, description);
+    };
+
     return {
       cid,
+      title,
+      abstract,
       ...state,
       addAuthor,
       removeAuthor,
       addField,
       removeField,
+      contractCall
     };
   },
 });
