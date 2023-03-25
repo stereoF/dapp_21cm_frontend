@@ -2,7 +2,8 @@
   <div class="menu">
     <img class="logo" src="../assets/logo.png" alt="logo">
     <div class="menu-items">
-      <div class="menu-item">Home</div>
+      <!-- <div class="menu-item">Home</div> -->
+      <router-link class="menu-item" to="/">Home</router-link>
       <div class="menu-item">Journal Home</div>
       <div class="menu-item">My Articles</div>
     </div>

@@ -35,7 +35,7 @@
   import { ethers } from 'ethers';
   
   export default defineComponent({
-    name: 'MyComponent',
+    name: 'HomeView',
     setup() {
       const walletConnected = ref(false);
       const balance = ref('0');

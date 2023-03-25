@@ -19,13 +19,13 @@ export default defineConfig({
     }
   },
   build: {
-    rollupOptions: {
-       input: {
-          // 配置所有页面路径，使得所有页面都会被打包
-          main: resolve(__dirname, 'index.html'),
-          uploadpage: resolve(__dirname, 'upload/index.html')
-       }
-    }
+    // rollupOptions: {
+    //    input: {
+    //       // 配置所有页面路径，使得所有页面都会被打包
+    //       main: resolve(__dirname, 'index.html'),
+    //       uploadpage: resolve(__dirname, 'upload/index.html')
+    //    }
+    // }
  },
   optimizeDeps: {
     esbuildOptions: {
