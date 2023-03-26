@@ -1,12 +1,27 @@
 <template>
-    <!-- <p>
-      <router-link to="/">Go to Home</router-link>
-      <router-link to="/upload">Go to Upload</router-link>
-    </p> -->
-    <router-view></router-view>
+  <div class="common-layout">
+    <el-container>
+      <el-header>
+        <Header/>
+      </el-header>
+      <el-main>
+        <div class="container">
+          <router-view></router-view>
+        </div>
+      </el-main>
+    </el-container>
+  </div>
 </template>
 
-<script setup lang="ts">
-
+<script setup>
+import Header from './components/Header.vue'
 </script>
+
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
 

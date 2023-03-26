@@ -4,7 +4,7 @@
     <form>
       <div>
         <label for="cid">CID:</label>
-        <input type="text" id="cid" v-model="cid" />
+        <input type="text" id="cid" v-model="cid" placeholder="select directory to get cid" />
       </div>
       <div>
         <label for="title">Title:</label>
@@ -45,8 +45,6 @@ import PrePrintArtifact from "../contracts/PrePrintTrack.json";
 import contractAddress from "../contracts/contract-address.json";
 import { useUploadStore } from '../store/upload';
 
-// const store = useUploadStore();
-// const { cid } = storeToRefs(store);
 
 interface Author {
   name: string;
