@@ -5,10 +5,10 @@
   </template>
 
   
-<script>
+<script lang="ts">
 import { ethers } from "ethers";
-import PrePrintArtifact from "../contracts/PrePrintTrack.json";
-import contractAddress from "../contracts/contract-address.json";
+import PrePrintTrack from "@/contracts/preprint/PrePrintTrack.json";
+import contractAddress from "@/contracts/preprint/contract-address.json";
 
 export default {
   name: "contractInfo",
@@ -16,8 +16,8 @@ export default {
     getInfo: async function() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const prePrint = new ethers.Contract(
-            contractAddress.PrePrintTrack,
-            PrePrintArtifact.abi,
+            "0xa8607C743A6f1F12cdF30Fc26Cd58012E1083B10",
+            PrePrintTrack.abi,
             provider
         );
         const ownerAddress = await prePrint.owner();

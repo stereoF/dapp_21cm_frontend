@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Meta Information</h2>
-    <form>
+    <form @submit.prevent="contractCall">
       <div>
         <label for="cid">CID:</label>
         <input type="text" id="cid" v-model="cid" placeholder="select directory to get cid" />
@@ -32,8 +32,9 @@
         <label for="abstract">Abstract:</label>
         <textarea id="abstract" v-model="abstract"></textarea>
       </div>
+      <button id="contractCall" type="submit">submit</button>
     </form>
-    <button id="contractCall" @click="contractCall">submit</button>
+    <div v-if="submitFailed">Submit failed</div>
   </div>
 </template>
 
@@ -41,10 +42,8 @@
 import { defineComponent, reactive, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { ethers } from "ethers";
-import PrePrintArtifact from "../contracts/PrePrintTrack.json";
-import contractAddress from "../contracts/contract-address.json";
-import { useUploadStore } from '../store/upload';
-
+import PrePrintTrack from "@/contracts/preprint/PrePrintTrack.json";
+import { useUploadStore } from '@/store/upload';
 
 interface Author {
   name: string;
@@ -58,18 +57,20 @@ interface Field {
 
 export default defineComponent({
   name: 'MetaInfo',
-  setup() {
+  props: {
+    address: String,
+  },
+  setup(props) {
     const store = useUploadStore();
     const { cid } = storeToRefs(store);
     const title = ref('');
     const abstract = ref('');
     const state = reactive({
-      // cid: '',
-      // title: '',
       authors: [{ name: '', email: '', workplace: '' }],
       fields: [{ field: '' }],
-      // abstract: '',
     });
+
+    const submitFailed = ref(false);
 
     const addAuthor = (index: number) => {
       state.authors.splice(index + 1, 0, { name: '', email: '', workplace: '' });
@@ -92,21 +93,38 @@ export default defineComponent({
     };
 
     const contractCall = async () => {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const signer = provider.getSigner();
-          const prePrint = new ethers.Contract(
-            contractAddress.PrePrintTrack,
-            PrePrintArtifact.abi,
-            provider
-          );
-          // console.log('The cid need to push: ', this.cid)
-          const PrePrintWithSigner = prePrint.connect(signer);
-          const description = {
-            ...state,
-            'title': title.value,
-            'abstract': abstract.value
-          };
-          await PrePrintWithSigner.submit(cid.value, title.value, description);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const prePrint = new ethers.Contract(
+        props.address || '',
+        PrePrintTrack.abi,
+        provider
+      );
+      const prePrintWithSigner = prePrint.connect(signer);
+      const description = {
+        ...state,
+        'title': title.value,
+        'abstract': abstract.value
+      };
+
+      try {
+        await prePrintWithSigner.submit(cid.value, title.value, description);
+      } catch (error) {
+        console.error(error);
+        submitFailed.value = true;
+      } finally {
+        state.authors.forEach(author => {
+          author.name = '';
+          author.email = '';
+          author.workplace = '';
+        });
+        state.fields.forEach(field => {
+          field.field = '';
+        });
+        title.value = '';
+        abstract.value = '';
+        cid.value = '';
+      }
     };
 
     return {
@@ -118,7 +136,8 @@ export default defineComponent({
       removeAuthor,
       addField,
       removeField,
-      contractCall
+      contractCall,
+      submitFailed,
     };
   },
 });
