@@ -28,8 +28,8 @@
                   <p>{{ paper.reviewers.join(', ') }}</p>
                 </div>
                 <div class="form-group">
-                  <label>Editors:</label>
-                  <p>{{ paper.editors.join(', ') }}</p>
+                  <label>Editor:</label>
+                  <p>{{ paper.editor }}</p>
                 </div>
                 <div class="form-group">
                   <label>Status:</label>
@@ -55,7 +55,7 @@ interface Paper {
   submitter: string;
   submitTime: string;
   reviewers: string[];
-  editors: string[];
+  editor: string;
   status: string;
 }
 
@@ -73,14 +73,15 @@ export default defineComponent({
     );
 
     let printInfo = await deSciPrint.deSciPrints(props.cid);
+    let process = await deSciPrint.deSciProcess(props.cid);
     let paper:Paper = {
       cid: props.cid || '',
       title: printInfo.keyInfo,
       submitter: printInfo.submitAddress,
       submitTime: printInfo.submitTime ? new Date(printInfo.submitTime * 1000).toLocaleString() : '', 
-      reviewers: [],
-      editors: [],
-      status: '',
+      reviewers: process.reviewers ? process.reviewers : [],
+      editor: process.editor === ethers.constants.AddressZero ? '' : process.editor,
+      status: process.processStatus,
     };
 
     return {

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <el-upload
     ref="upload"
     v-model:file-list="fileList"
@@ -23,6 +23,38 @@
     </div>
   </el-upload>
   <div v-if="cidMismatch" class="error-message">
+    Frontend and backend computed different CIDs.
+  </div>
+</template> -->
+
+<template>
+  <el-upload
+    ref="upload"
+    v-model:file-list="fileList"
+    class="upload-demo"
+    action=""
+    multiple
+    :auto-upload="false"
+  >
+    <template #trigger>
+        <el-button type="primary" class="btn btn-primary">Select Directory</el-button>
+    </template>
+    <template #tip>
+      <div class="el-upload__tip">
+        Select the directory/folder contains your materials.
+      </div>
+    </template>
+    <div style="display: flex; align-items: center;">
+      <el-button class="mr-3 btn btn-success" type="success" :disabled="fileListEmpty" @click="submitUpload">
+          Get the CID
+      </el-button>
+      <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" v-model="uploadToServer" id="uploadToServerSwitch" checked>
+          <label class="form-check-label" for="uploadToServerSwitch">Upload to server</label>
+      </div>
+    </div>
+  </el-upload>
+  <div v-if="cidMismatch" class="error-message mt-3">
     Frontend and backend computed different CIDs.
   </div>
 </template>
@@ -117,9 +149,18 @@ const submitUpload = async () => {
 </script>
 
 
-<style>
+<!-- <style>
 .error-message {
   color: red;
 }
-</style>
+</style> -->
 
+
+        
+<style scoped>
+.error-message {
+  color: red;
+  font-size: 14px;
+  font-weight: 500;
+}
+</style>

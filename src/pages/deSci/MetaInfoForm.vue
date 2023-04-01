@@ -38,12 +38,6 @@
           <div class="col-10 pr-1">
             <input type="text" v-model="field.field" placeholder="Field" class="form-control" />
           </div>
-          <!-- <div class="col-1">
-            <button type="button" @click="addField(index)" class="btn btn-success btn-sm">+</button>
-          </div>
-          <div class="col-1">
-            <button type="button" @click="removeField(index)" class="btn btn-danger btn-sm">-</button>
-          </div> -->
           <div class="col-1 author-buttons">
             <div>
               <button type="button" @click="addField(index)" class="btn btn-success btn-sm">+</button>
@@ -66,9 +60,16 @@
         <label for="gas">Pay gas fee to editors and reviewers</label>
         <input type="text" id="gas" v-model="gas" class="form-control">
       </div>
-      <button id="contractCall" type="submit" class="btn btn-primary mt-2">Submit</button>
+      <div class="row mt-2">
+        <div class="col-12 col-sm-8">
+          <button id="contractCall" type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-12 col-sm-4 mt-2 mt-sm-0">
+          <div v-if="submitFailed" class="text-danger">Submit failed</div>
+          <div v-if="submitSucceed" class="text-success">The paper's information has been written into the smart contract</div>
+        </div>
+      </div>
     </form>
-    <div v-if="submitFailed" class="text-danger mt-2">Submit failed</div>
   </div>
 </template>
 
@@ -122,7 +123,8 @@ export default defineComponent({
     const donate = ref(minDonateEth);
     const gas = ref(minGasEth);
 
-    const submitFailed = ref(false);
+    let submitFailed = ref(false);
+    let submitSucceed = ref(false);
 
     const addAuthor = (index: number) => {
       state.authors.splice(index + 1, 0, { name: '', email: '', workplace: '' });
@@ -162,22 +164,25 @@ export default defineComponent({
 
       try {
           await deSciPrintWithSigner.submitForReview(cid.value, title.value, description, donateEther, { value: amount });
-        } catch (error) {
-          console.error(error);
-          submitFailed.value = true;
-        } finally {
-          state.authors.forEach(author => {
-            author.name = '';
-            author.email = '';
-            author.workplace = '';
-          });
-          state.fields.forEach(field => {
-            field.field = '';
-          });
-          title.value = '';
-          abstract.value = '';
-          cid.value = '';
-        }
+          submitSucceed.value = true;
+          submitFailed.value = false;
+      } catch (error) {
+        console.error(error);
+        submitFailed.value = true;
+        submitSucceed.value = false;
+      } finally {
+        state.authors.forEach(author => {
+          author.name = '';
+          author.email = '';
+          author.workplace = '';
+        });
+        state.fields.forEach(field => {
+          field.field = '';
+        });
+        title.value = '';
+        abstract.value = '';
+        cid.value = '';
+      }
     };
 
     return {
@@ -191,6 +196,7 @@ export default defineComponent({
       removeField,
       contractCall,
       submitFailed,
+      submitSucceed,
       donate,
       gas
     };
@@ -261,6 +267,22 @@ div[v-if="submitFailed"] {
 
 .author-buttons button {
   margin-left: 8px;
+}
+
+.row .col-12.col-sm-8 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.row .col-12.col-sm-4 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.text-danger, .text-success {
+  margin-left: 10px;
 }
 
 </style>
