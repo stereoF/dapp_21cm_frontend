@@ -11,7 +11,9 @@
             <!-- <FileUpload class="center" @cid-value="cidValue = $event"/> -->
             <!-- <div v-if="cidValue">CID Value: {{cidValue}}</div> -->
           </div>
-          <MetaInfo address="0xcfCA439EB07c003e152137C189199170285d87fD"/>
+          <Suspense>
+            <MetaInfo address="0xcfCA439EB07c003e152137C189199170285d87fD"/>
+          </Suspense>
           <!-- <PushPrePrint/> -->
           <!-- <ContractInfo/> -->
         </div>
@@ -22,7 +24,8 @@
 
 <script setup>
 import FileUpload from '@/components/FileUpload.vue'
-import MetaInfo from './MetaInfoForm.vue'
+import { defineAsyncComponent } from 'vue'
+const MetaInfo = defineAsyncComponent(() => import('./MetaInfoForm.vue'))
 // import ContractInfo from '@/components/ContractInfo.vue'
 // import { ref } from 'vue'
 

@@ -66,7 +66,7 @@ export default defineComponent({
   props: {
     address: String,
   },
-  setup(props) {
+  async setup(props) {
     const store = useUploadStore();
     const { cid } = storeToRefs(store);
     const title = ref('');
@@ -75,8 +75,23 @@ export default defineComponent({
       authors: [{ name: '', email: '', workplace: '' }],
       fields: [{ field: '' }],
     });
-    const donate = ref('0');
-    const gas = ref('0');
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const deSciPrint = new ethers.Contract(
+      props.address || '',
+      DeSciPrint.abi,
+      provider
+    );
+
+
+    let minGas = await deSciPrint.gasFee(0);
+    let minDonate = await deSciPrint.gasFee(4);
+
+    let minGasEth = ethers.utils.formatEther(minGas);
+    let minDonateEth = ethers.utils.formatEther(minDonate);
+
+    const donate = ref(minDonateEth);
+    const gas = ref(minGasEth);
 
     const submitFailed = ref(false);
 
@@ -101,42 +116,39 @@ export default defineComponent({
     };
 
     const contractCall = async () => {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const deSciPrint = new ethers.Contract(
-        props.address || '',
-        DeSciPrint.abi,
-        provider
-      );
-      const deSciPrintWithSigner = deSciPrint.connect(signer);
+
+      // const deSciPrintWithSigner = deSciPrint.connect(signer);
       const description = {
         ...state,
         'title': title.value,
         'abstract': abstract.value
       };
-
+      
+      const signer = provider.getSigner();
+      const deSciPrintWithSigner = deSciPrint.connect(signer);
+        
       let donateEther = ethers.utils.parseEther(donate.value);
       let gasEther = ethers.utils.parseEther(gas.value);
       let amount = donateEther.add(gasEther);
 
       try {
-        await deSciPrintWithSigner.submitForReview(cid.value, title.value, description, donateEther, { value: amount });
-      } catch (error) {
-        console.error(error);
-        submitFailed.value = true;
-      } finally {
-        state.authors.forEach(author => {
-          author.name = '';
-          author.email = '';
-          author.workplace = '';
-        });
-        state.fields.forEach(field => {
-          field.field = '';
-        });
-        title.value = '';
-        abstract.value = '';
-        cid.value = '';
-      }
+          await deSciPrintWithSigner.submitForReview(cid.value, title.value, description, donateEther, { value: amount });
+        } catch (error) {
+          console.error(error);
+          submitFailed.value = true;
+        } finally {
+          state.authors.forEach(author => {
+            author.name = '';
+            author.email = '';
+            author.workplace = '';
+          });
+          state.fields.forEach(field => {
+            field.field = '';
+          });
+          title.value = '';
+          abstract.value = '';
+          cid.value = '';
+        }
     };
 
     return {
