@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-4">
-    <h2>Meta Information</h2>
+    <h2>Meta Information need submitting to Journal: {{ journalName }}</h2>
     <form @submit.prevent="contractCall">
       <div class="form-group">
         <label for="cid">CID:</label>
@@ -116,6 +116,7 @@ export default defineComponent({
 
     let minGas = await deSciPrint.gasFee(0);
     let minDonate = await deSciPrint.gasFee(4);
+    let journalName = ref(await deSciPrint.name());
 
     let minGasEth = ethers.utils.formatEther(minGas);
     let minDonateEth = ethers.utils.formatEther(minDonate);
@@ -198,7 +199,8 @@ export default defineComponent({
       submitFailed,
       submitSucceed,
       donate,
-      gas
+      gas,
+      journalName
     };
   },
 });

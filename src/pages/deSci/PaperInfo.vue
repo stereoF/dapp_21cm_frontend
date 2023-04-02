@@ -63,15 +63,15 @@ export default defineComponent({
   name: 'PaperInfo',
   props: {
     cid: String,
+    address: String,
   },
   async setup(props) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const deSciPrint = new ethers.Contract(
-    "0xcfCA439EB07c003e152137C189199170285d87fD",
+      props.address || '',
       DeSciPrint.abi,
       provider
     );
-
     let printInfo = await deSciPrint.deSciPrints(props.cid);
     let process = await deSciPrint.deSciProcess(props.cid);
     let paper:Paper = {

@@ -93,7 +93,7 @@ const fileListEmpty = computed(() => {
   return fileList.value.length > 0 ? false : true
 })
 
-const uploadToServer = ref(false)
+const uploadToServer = ref(true)
 
 const submitUpload = async () => {
   // console.log(fileList.value)

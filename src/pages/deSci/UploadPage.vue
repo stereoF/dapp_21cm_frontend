@@ -1,20 +1,16 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <!-- <el-header>
-        <Header/>
-      </el-header> -->
       <el-main>
         <div class="container">
           <div class="file-upload-container">
             <FileUpload/>
-            <!-- <FileUpload class="center" @cid-value="cidValue = $event"/> -->
             <!-- <div v-if="cidValue">CID Value: {{cidValue}}</div> -->
           </div>
           <Suspense>
-            <MetaInfo address="0xcfCA439EB07c003e152137C189199170285d87fD"/>
+            <!-- <MetaInfo address="0xcfCA439EB07c003e152137C189199170285d87fD"/> -->
+            <router-view/>
           </Suspense>
-          <!-- <PushPrePrint/> -->
           <!-- <ContractInfo/> -->
         </div>
       </el-main>
@@ -25,11 +21,7 @@
 <script setup>
 import FileUpload from '@/components/FileUpload.vue'
 import { defineAsyncComponent } from 'vue'
-const MetaInfo = defineAsyncComponent(() => import('./MetaInfoForm.vue'))
-// import ContractInfo from '@/components/ContractInfo.vue'
-// import { ref } from 'vue'
-
-// const cidValue = ref(null)
+// const MetaInfo = defineAsyncComponent(() => import('./MetaInfoForm.vue'))
 
 </script>
 

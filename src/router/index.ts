@@ -21,12 +21,21 @@ const router = createRouter({
     {
       path: '/desci/upload',
       name: 'desci-upload',
-      component: () => import('@/pages/deSci/UploadPage.vue')
+      component: () => import('@/pages/deSci/UploadPage.vue'),
+      children: [
+        {
+          path: ':address',
+          name: 'desci-upload-metainfo',
+          component: () => import('@/pages/deSci/MetaInfoForm.vue'),
+          props: true
+        },
+      ]
     },
     {
-      path: '/desci/paper/assignReviews',
+      path: '/desci/paper/assignReviews/:address/:paperId',
       name: 'desci-paper',
-      component: () => import('@/pages/deSci/AssignReviewsPage.vue')
+      component: () => import('@/pages/deSci/AssignReviewsPage.vue'),
+      props: true
     }
   ]
 })
