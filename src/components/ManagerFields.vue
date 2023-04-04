@@ -36,7 +36,7 @@
                 // }
             }
         },
-        setup(props) {
+        setup(props, context) {
             const fields = reactive(props.fields || [{ field: '' }]);
             // const fields = reactive([{ field: '' }]);
             if (fields.length === 0) {
@@ -45,18 +45,23 @@
 
             function addField(index: number) {
                 fields.splice(index + 1, 0, { field: '' })
-            }
+            };
 
             function removeField(index: number) {
                 fields.splice(index, 1)
-            }
+            };
+
+            context.expose({
+                fields
+            });
 
             return {
                 fields,
                 addField,
                 removeField
             }
-        }
+        },
+        expose: ['fields']
     })
     
 
