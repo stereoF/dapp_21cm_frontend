@@ -94,7 +94,10 @@ interface Field {
 export default defineComponent({
   name: 'MetaInfo',
   props: {
-    address: String,
+    address: {
+      type: String,
+      required: true,
+    },
   },
   async setup(props) {
     const store = useUploadStore();
@@ -108,7 +111,7 @@ export default defineComponent({
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const deSciPrint = new ethers.Contract(
-      props.address || '',
+      props.address,
       DeSciPrint.abi,
       provider
     );

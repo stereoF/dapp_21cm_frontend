@@ -36,6 +36,19 @@ const router = createRouter({
       name: 'desci-paper',
       component: () => import('@/pages/deSci/AssignReviewsPage.vue'),
       props: true
+    },
+    {
+      path: '/desci/owner/assignEditors',
+      name: 'desci-assign-editor',
+      component: () => import('@/pages/deSci/OwnerPages/AssignEditorsPage.vue'),
+      children: [
+        {
+          path: ':address',
+          name: 'desci-assign-editor-journal',
+          component: () => import('@/pages/deSci/OwnerPages/AssignEditors.vue'),
+          props: true
+        },
+      ]
     }
   ]
 })

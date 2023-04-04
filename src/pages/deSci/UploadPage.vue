@@ -20,7 +20,7 @@
 
 <script setup>
 import FileUpload from '@/components/FileUpload.vue'
-import { defineAsyncComponent } from 'vue'
+// import { defineAsyncComponent } from 'vue'
 // const MetaInfo = defineAsyncComponent(() => import('./MetaInfoForm.vue'))
 
 </script>

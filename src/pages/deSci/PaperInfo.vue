@@ -62,20 +62,26 @@ interface Paper {
 export default defineComponent({
   name: 'PaperInfo',
   props: {
-    cid: String,
-    address: String,
+    cid: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
   },
   async setup(props) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const deSciPrint = new ethers.Contract(
-      props.address || '',
+      props.address,
       DeSciPrint.abi,
       provider
     );
     let printInfo = await deSciPrint.deSciPrints(props.cid);
     let process = await deSciPrint.deSciProcess(props.cid);
     let paper:Paper = {
-      cid: props.cid || '',
+      cid: props.cid,
       title: printInfo.keyInfo,
       submitter: printInfo.submitAddress,
       submitTime: printInfo.submitTime ? new Date(printInfo.submitTime * 1000).toLocaleString() : '', 
