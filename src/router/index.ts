@@ -32,22 +32,22 @@ const router = createRouter({
       ]
     },
     {
-      path: '/desci/paper/assignReviews/:address/:paperId',
-      name: 'desci-paper',
-      component: () => import('@/pages/deSci/AssignReviewsPage.vue'),
-      props: true
-    },
-    {
-      path: '/desci/owner/assignEditors',
-      name: 'desci-assign-editor',
-      component: () => import('@/pages/deSci/OwnerPages/AssignEditorsPage.vue'),
+      path: '/desci',
+      name: 'desci-assign',
+      component: () => import('@/components/SuspenseWraper.vue'),
       children: [
         {
-          path: ':address',
+          path: 'owner/assignEditors/:address',
           name: 'desci-assign-editor-journal',
           component: () => import('@/pages/deSci/OwnerPages/AssignEditors.vue'),
           props: true
         },
+        {
+          path: 'editor/assignReviewers/:address/:paperId',
+          name: 'desci-assign-reviewer-paper',
+          component: () => import('@/pages/deSci/EditorPages/AssignReviewers.vue'),
+          props: true
+        }
       ]
     }
   ]
