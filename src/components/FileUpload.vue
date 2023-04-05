@@ -1,32 +1,3 @@
-<!-- <template>
-  <el-upload
-    ref="upload"
-    v-model:file-list="fileList"
-    class="upload-demo"
-    action=""
-    multiple
-    :auto-upload="false"
-  >
-    <template #trigger>
-        <el-button type="primary">select directory</el-button>
-    </template>
-    <template #tip>
-      <div class="el-upload__tip">
-        select the directory/folder contains your materials.
-      </div>
-    </template>
-    <div style="display: flex; align-items: center;">
-      <el-button class="mr-3" type="success" :disabled="fileListEmpty" @click="submitUpload">
-          get the cid
-      </el-button>
-      <el-checkbox v-model="uploadToServer" style="margin-right: 10px;" checked>upload to server</el-checkbox>
-    </div>
-  </el-upload>
-  <div v-if="cidMismatch" class="error-message">
-    Frontend and backend computed different CIDs.
-  </div>
-</template> -->
-
 <template>
   <el-upload
     ref="upload"

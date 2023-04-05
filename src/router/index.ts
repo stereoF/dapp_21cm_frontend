@@ -49,6 +49,12 @@ const router = createRouter({
           props: true
         }
       ]
+    },
+    {
+      path: '/desci/review/:address/:paperCID',
+      name: 'desci-review-paper',
+      component: () => import('@/pages/deSci/ReviewerPages/SubmitCommentPage.vue'),
+      props: true
     }
   ]
 })
