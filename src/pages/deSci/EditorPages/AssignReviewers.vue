@@ -28,7 +28,6 @@ import { defineComponent, ref, reactive } from 'vue';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import ManagerFields from '@/components/ManagerFields.vue';
-import { describe } from 'node:test';
 
 export default defineComponent({
     name: "AssignReviewers",
