@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
