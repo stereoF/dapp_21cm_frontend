@@ -11,11 +11,12 @@
               :value="item.value"
           />
         </el-select>
+        <button id="contractCall" type="submit" class="btn btn-primary ml-2">Submit</button>
       </div>
       <div class="row mt-2">
-        <div class="col-12 col-sm-8">
+        <!-- <div class="col-12 col-sm-8">
           <button id="contractCall" type="submit" class="btn btn-primary">Submit</button>
-        </div>
+        </div> -->
         <div class="col-12 col-sm-4 mt-2 mt-sm-0">
           <div v-if="submitFailed" class="text-danger">Submit failed</div>
           <div v-if="submitSucceed" class="text-success">Submit succeed</div>
@@ -119,6 +120,10 @@ export default defineComponent({
 
 .el-select {
   width: 150px;
+}
+
+#contractCall {
+  margin-left: 10px;
 }
 </style>
 
