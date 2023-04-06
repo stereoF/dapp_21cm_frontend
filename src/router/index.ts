@@ -47,15 +47,15 @@ const router = createRouter({
           name: 'desci-assign-reviewer-paper',
           component: () => import('@/pages/deSci/EditorPages/AssignReviewers.vue'),
           props: true
+        },
+        {
+          path: 'review/:address/:paperCID',
+          name: 'desci-review-paper',
+          component: () => import('@/pages/deSci/ReviewerPages/SubmitCommentPage.vue'),
+          props: true
         }
       ]
     },
-    {
-      path: '/desci/review/:address/:paperCID',
-      name: 'desci-review-paper',
-      component: () => import('@/pages/deSci/ReviewerPages/SubmitCommentPage.vue'),
-      props: true
-    }
   ]
 })
 
