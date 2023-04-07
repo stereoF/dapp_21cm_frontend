@@ -27,23 +27,16 @@ const router = createRouter({
       ]
     },
     {
-      path: '/desci/upload',
-      name: 'desci-upload',
-      component: () => import('@/pages/deSci/UploadPage.vue'),
-      children: [
-        {
-          path: ':address',
-          name: 'desci-upload-metainfo',
-          component: () => import('@/pages/deSci/MetaInfoForm.vue'),
-          props: true
-        },
-      ]
-    },
-    {
       path: '/desci',
       name: 'desci-assign',
       component: () => import('@/components/SuspenseWraper.vue'),
       children: [
+        {
+          path: 'submit/:address',
+          name: 'desci-submit',
+          component: () => import('@/pages/deSci/SubmitPage.vue'),
+          props: true
+        },
         {
           path: 'owner/assignEditors/:address',
           name: 'desci-assign-editor-journal',

@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 
 const switchNetwork = async () => {
   if (window.ethereum) {
-    console.log("window.ethereum.chainId", window.ethereum.chainId)
+    // console.log("window.ethereum.chainId", window.ethereum.chainId)
     try {
       // Try to switch to the Mumbai testnet
       await window.ethereum.request({
