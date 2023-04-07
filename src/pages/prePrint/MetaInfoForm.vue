@@ -1,42 +1,70 @@
 <template>
-  <div>
-    <h2>Meta Information</h2>
+  <div class="container mt-4">
+    <h2>Meta Information need submitting to Preprint Repository</h2>
     <form @submit.prevent="contractCall">
-      <div>
+      <div class="form-group">
         <label for="cid">CID:</label>
-        <input type="text" id="cid" v-model="cid" placeholder="select directory to get cid" />
+        <input type="text" id="cid" class="form-control" v-model="cid" placeholder="Select directory to get CID" />
       </div>
-      <div>
+      <div class="form-group">
         <label for="title">Title:</label>
-        <input type="text" id="title" v-model="title" />
+        <input type="text" id="title" class="form-control" v-model="title" />
       </div>
-      <div>
+      <div class="form-group">
         <label for="authors">Authors:</label>
-        <div v-for="(author, index) in authors" :key="index">
-          <input type="text" v-model="author.name" placeholder="Name" />
-          <input type="email" v-model="author.email" placeholder="Email" />
-          <input type="text" v-model="author.workplace" placeholder="Workplace" />
-          <button type="button" @click="addAuthor(index)">+</button>
-          <button type="button" @click="removeAuthor(index)">-</button>
+        <div v-for="(author, index) in authors" :key="index" class="row align-items-center">
+          <div class="col-3 pr-1">
+            <input type="text" v-model="author.name" placeholder="Name" class="form-control" />
+          </div>
+          <div class="col-4 px-1">
+            <input type="email" v-model="author.email" placeholder="Email" class="form-control" />
+          </div>
+          <div class="col-4 pl-1">
+            <input type="text" v-model="author.workplace" placeholder="Workplace" class="form-control" />
+          </div>
+          <div class="col-1 author-buttons">
+            <div>
+              <button type="button" @click="addAuthor(index)" class="btn btn-success btn-sm">+</button>
+            </div>
+            <div>
+              <button type="button" @click="removeAuthor(index)" class="btn btn-danger btn-sm">-</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div>
+      <div class="form-group">
         <label for="fields">Fields:</label>
-        <div v-for="(field, index) in fields" :key="index">
-          <input type="text" v-model="field.field" placeholder="field" />
-          <button type="button" @click="addField(index)">+</button>
-          <button type="button" @click="removeField(index)">-</button>
+        <div v-for="(field, index) in fields" :key="index" class="row align-items-center">
+          <div class="col-10 pr-1">
+            <input type="text" v-model="field.field" placeholder="Field" class="form-control" />
+          </div>
+          <div class="col-1 author-buttons">
+            <div>
+              <button type="button" @click="addField(index)" class="btn btn-success btn-sm">+</button>
+            </div>
+            <div>
+              <button type="button" @click="removeField(index)" class="btn btn-danger btn-sm">-</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div>
+      <div class="form-group">
         <label for="abstract">Abstract:</label>
-        <textarea id="abstract" v-model="abstract"></textarea>
+        <textarea id="abstract" v-model="abstract" class="form-control"></textarea>
       </div>
-      <button id="contractCall" type="submit">submit</button>
+      <div class="row mt-2">
+        <div class="col-12 col-sm-8">
+          <button id="contractCall" type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-12 col-sm-4 mt-2 mt-sm-0">
+          <div v-if="submitFailed" class="text-danger">Submit Failed</div>
+          <div v-if="submitSucceed" class="text-success">Submit Succeed</div>
+        </div>
+      </div>
     </form>
-    <div v-if="submitFailed">Submit failed</div>
   </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
@@ -70,7 +98,8 @@ export default defineComponent({
       fields: [{ field: '' }],
     });
 
-    const submitFailed = ref(false);
+    let submitFailed = ref(false);
+    let submitSucceed = ref(false);
 
     const addAuthor = (index: number) => {
       state.authors.splice(index + 1, 0, { name: '', email: '', workplace: '' });
@@ -109,9 +138,12 @@ export default defineComponent({
 
       try {
         await prePrintWithSigner.submit(cid.value, title.value, description);
+        submitSucceed.value = true;
+        submitFailed.value = false;
       } catch (error) {
         console.error(error);
         submitFailed.value = true;
+        submitSucceed.value = false;
       } finally {
         state.authors.forEach(author => {
           author.name = '';
@@ -138,8 +170,93 @@ export default defineComponent({
       removeField,
       contractCall,
       submitFailed,
+      submitSucceed,
     };
   },
 });
 </script>
+
+
+<style scoped>
+/* 样式代码 */
+h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: #5bc0de;
+}
+
+button[type="button"] {
+  border: none;
+  background-color: #5bc0de;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+button[type="submit"] {
+  border: none;
+  background-color: #5cb85c;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #449d44;
+}
+
+div[v-if="submitFailed"] {
+  color: red;
+  margin-top: 16px;
+}
+
+.author-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.author-buttons button {
+  margin-left: 8px;
+}
+
+.row .col-12.col-sm-8 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.row .col-12.col-sm-4 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.text-danger, .text-success {
+  margin-left: 10px;
+}
+
+</style>
 

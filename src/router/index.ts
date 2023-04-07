@@ -16,7 +16,15 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('@/pages/prePrint/UploadPage.vue')
+      component: () => import('@/pages/prePrint/UploadPage.vue'),
+      children: [
+        {
+          path: ':address',
+          name: 'preprint-upload-metainfo',
+          component: () => import('@/pages/prePrint/MetaInfoForm.vue'),
+          props: true
+        },
+      ]
     },
     {
       path: '/desci/upload',

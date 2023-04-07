@@ -10,6 +10,9 @@
           <Suspense>
             <!-- <MetaInfo address="0xcfCA439EB07c003e152137C189199170285d87fD"/> -->
             <router-view/>
+            <template #fallback>
+              Loading...
+            </template>
           </Suspense>
           <!-- <ContractInfo/> -->
         </div>

@@ -7,6 +7,9 @@
           <div>
             <Suspense>
               <PaperInfo :address="$props.address" :cid="$props.paperCID"/>
+              <template #fallback>
+                Loading...
+              </template>
             </Suspense>
           </div>
           <div class="divider"></div>
