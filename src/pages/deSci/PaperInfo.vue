@@ -49,6 +49,8 @@ import { defineComponent } from 'vue';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import { useStatus } from '@/scripts/status';
+import { useProvider } from '@/scripts/ethProvider'
+
 
 interface Paper {
   cid: string;
@@ -73,7 +75,8 @@ export default defineComponent({
     },
   },
   async setup(props) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const { provider } = await useProvider();
+    // const provider = new ethers.providers.Web3Provider(window.ethereum);
     const deSciPrint = new ethers.Contract(
       props.address,
       DeSciPrint.abi,

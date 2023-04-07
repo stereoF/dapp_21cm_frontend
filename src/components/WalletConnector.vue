@@ -20,7 +20,7 @@ const { balance, getWalletConnected } = storeToRefs(store);
 
 
 async function connectWallet() {
-  const { provider } = useProvider();
+  const { provider } = await useProvider();
   const signer = provider.getSigner();
   const address = await signer.getAddress();
   const balanceWei = await provider.getBalance(address);

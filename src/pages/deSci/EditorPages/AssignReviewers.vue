@@ -28,6 +28,7 @@ import { defineComponent, ref, reactive } from 'vue';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import ManagerFields from '@/components/ManagerFields.vue';
+import { useProvider } from '@/scripts/ethProvider'
 
 export default defineComponent({
     name: "AssignReviewers",
@@ -44,7 +45,8 @@ export default defineComponent({
     async setup(props) {
         const reviewerFields = ref();
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        // const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const { provider } = await useProvider();
         const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
         const paperId = ref(props.paperId)
         const editors = reactive(await deSciPrint.editors());

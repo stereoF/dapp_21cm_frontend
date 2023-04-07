@@ -19,7 +19,12 @@
               <div class="file-upload-container">
                 <FileUpload/>
               </div>
-              <SubmitCommentCID :address="$props.address" :paperCID="$props.paperCID"/>
+              <Suspense>
+                <SubmitCommentCID :address="$props.address" :paperCID="$props.paperCID"/>
+                <template #fallback>
+                  Loading...
+                </template>
+              </Suspense>
             </div>
           </div>
           <div v-else>
@@ -39,6 +44,7 @@ import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import FileUpload from '@/components/FileUpload.vue'
 import SubmitCommentCID from './SubmitCommentCID.vue'
 import PaperInfo from '@/pages/deSci/PaperInfo.vue'
+import { useProvider } from '@/scripts/ethProvider'
 
 const props = defineProps(
   {
@@ -53,7 +59,8 @@ const props = defineProps(
   }
 );
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
+// const provider = new ethers.providers.Web3Provider(window.ethereum);
+const { provider } = await useProvider();
 const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
 const paperId = ref(props.paperCID)
 

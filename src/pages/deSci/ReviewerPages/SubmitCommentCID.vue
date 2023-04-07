@@ -31,6 +31,7 @@ import { storeToRefs } from 'pinia';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import { useUploadStore } from '@/store/upload';
+import { useProvider } from '@/scripts/ethProvider'
 
 export default defineComponent({
     name: 'SubmitCommentCID',
@@ -44,7 +45,7 @@ export default defineComponent({
             required: true,
         },
     },
-    setup(props) {
+    async setup(props) {
         const store = useUploadStore();
         const { cid } = storeToRefs(store);
         const submitFailed = ref(false);
@@ -67,7 +68,8 @@ export default defineComponent({
             },
         ]
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        // const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const { provider } = await useProvider();
         const signer = provider.getSigner();
 
         const deSciPrint = new ethers.Contract(

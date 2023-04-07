@@ -80,6 +80,7 @@ import { storeToRefs } from 'pinia';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import { useUploadStore } from '@/store/upload';
+import { useProvider } from '@/scripts/ethProvider'
 
 interface Author {
   name: string;
@@ -109,7 +110,8 @@ export default defineComponent({
       fields: [{ field: '' }],
     });
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    // const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const { provider } = await useProvider();
     const deSciPrint = new ethers.Contract(
       props.address,
       DeSciPrint.abi,
