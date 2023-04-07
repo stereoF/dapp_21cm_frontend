@@ -10,12 +10,17 @@
             </Suspense>
           </div>
           <div class="divider"></div>
-          <h3 class="title">Upload your review comments and make your decision</h3>
-          <div class="container">
-            <div class="file-upload-container">
-              <FileUpload/>
+          <div v-if="reviewStatus == 0">
+            <h3 class="title">Upload your review comments and make your decision</h3>
+            <div class="container">
+              <div class="file-upload-container">
+                <FileUpload/>
+              </div>
+              <SubmitCommentCID :address="$props.address" :paperCID="$props.paperCID"/>
             </div>
-            <SubmitCommentCID :address="$props.address" :paperCID="$props.paperCID"/>
+          </div>
+          <div v-else>
+            <h3 class="title">You have already submitted your review comments.</h3>
           </div>
         </div>
       </el-main>
@@ -51,6 +56,9 @@ const paperId = ref(props.paperCID)
 
 const yourAddress = ref(await provider.getSigner().getAddress());
 const isReviewer = ref(await deSciPrint._isReviewer(paperId.value, yourAddress.value));
+
+const reviewInfo = ref(await deSciPrint.deSciReviews(paperId.value, yourAddress.value));
+const reviewStatus = ref(reviewInfo.value.reviewerStatus);
 
 
 </script>

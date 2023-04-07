@@ -4,6 +4,7 @@
   "compilerOptions": {
     "composite": true,
     "types": ["node"],
-    "allowJs": true
+    "allowJs": true,
+    "ignoreDeprecations": "5.0"
   }
 }

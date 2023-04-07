@@ -48,6 +48,7 @@
 import { defineComponent } from 'vue';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
+import { useStatus } from '@/scripts/status.ts';
 
 interface Paper {
   cid: string;
@@ -78,16 +79,22 @@ export default defineComponent({
       DeSciPrint.abi,
       provider
     );
+    const { ProcessStatus } = useStatus();
+
     let printInfo = await deSciPrint.deSciPrints(props.cid);
     let process = await deSciPrint.deSciProcess(props.cid);
+    let reviewers = await deSciPrint.getReviewers(props.cid);
+    let processIndex: number = process.processStatus;
+
     let paper:Paper = {
       cid: props.cid,
       title: printInfo.keyInfo,
       submitter: printInfo.submitAddress,
       submitTime: printInfo.submitTime ? new Date(printInfo.submitTime * 1000).toLocaleString() : '', 
-      reviewers: process.reviewers ? process.reviewers : [],
+      reviewers: reviewers ? reviewers : [],
       editor: process.editor === ethers.constants.AddressZero ? '' : process.editor,
-      status: process.processStatus,
+      // status: process.processStatus,
+      status: ProcessStatus[processIndex],
     };
 
     return {
