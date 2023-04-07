@@ -9,33 +9,24 @@
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ethers } from 'ethers';
 import { storeToRefs } from 'pinia';
 import { useWalletStore } from '../store/wallet';
+import { useProvider } from '@/scripts/ethProvider'
 
 const store = useWalletStore();
 const { balance, getWalletConnected } = storeToRefs(store);
 
 
 async function connectWallet() {
-    if (window.ethereum !== 'undefined') {
-        try {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
-        const balanceWei = await provider.getBalance(address);
-        
-        store.setBalance(ethers.utils.formatEther(balanceWei));
-        store.setAddress(address);
-
-        } catch (error) {
-        console.error(error);
-        }
-    } else {
-        console.error('No web3 wallet detected');
-    }
+  const { provider } = useProvider();
+  const signer = provider.getSigner();
+  const address = await signer.getAddress();
+  const balanceWei = await provider.getBalance(address);
+  
+  store.setBalance(parseFloat(ethers.utils.formatEther(balanceWei)));
+  store.setAddress(address);
 }
 
 </script>

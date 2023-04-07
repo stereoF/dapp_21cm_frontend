@@ -48,7 +48,7 @@
 import { defineComponent } from 'vue';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
-import { useStatus } from '@/scripts/status.ts';
+import { useStatus } from '@/scripts/status';
 
 interface Paper {
   cid: string;
