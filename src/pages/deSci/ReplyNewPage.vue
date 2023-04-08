@@ -1,14 +1,23 @@
 <template>
     <div class="common-layout">
       <el-container>
+        <el-header>
+            <h2>Journal: {{ journalName }}</h2>
+        </el-header>
         <el-main>
-          <div class="container">
+          <div v-if="!isAuthor" class="text-danger">You are not the author of this paper</div>
+          <div v-else-if="process.processStatus != 5" class="text-danger">The status of this paper must be NeedRevise</div>
+          <div v-else class="container">
+            <div>
+                <h3>Previous version of the paper:</h3>
+                <PaperInfo :cid="props.prevCID" :address="props.address" />
+            </div>
+            <div class="divider"></div>
             <div class="file-upload-container">
               <FileUpload/>
               <!-- <div v-if="cidValue">CID Value: {{cidValue}}</div> -->
             </div>
             <div class="container mt-4">
-                <h2>Meta Information need submitting to Journal: {{ journalName }}</h2>
                 <form @submit.prevent="contractCall">
                     <Suspense>
                         <MetaForm :address="props.address" ref="metaForm"/>
@@ -35,9 +44,10 @@
   
 <script lang="ts" setup>
     import { ethers } from "ethers";
-    import { ref } from 'vue';
+    import { ref, reactive } from 'vue';
     import FileUpload from '@/components/FileUpload.vue'
     import MetaForm from "./MetaForm.vue";
+    import PaperInfo from "./PaperInfo.vue";
     import { useProvider } from '@/scripts/ethProvider'
     import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 
@@ -45,6 +55,10 @@
     const props = defineProps(
         {
             address: {
+                type: String,
+                required: true,
+            },
+            prevCID: {
                 type: String,
                 required: true,
             },
@@ -61,6 +75,13 @@
     let journalName = ref(await deSciPrint.name());
     let submitFailed = ref(false);
     let submitSucceed = ref(false);
+
+    let printInfo = reactive(await deSciPrint.deSciPrints(props.prevCID));
+
+    const yourAddress = ref(await provider.getSigner().getAddress());
+    const isAuthor = ref(yourAddress.value === printInfo.submitAddress);
+
+    let process = reactive(await deSciPrint.deSciProcess(props.prevCID));
 
     const contractCall = async () => {
         // const deSciPrintWithSigner = deSciPrint.connect(signer);
@@ -79,7 +100,7 @@
         let amount = donateEther.add(gasEther);
 
         try {
-            await deSciPrintWithSigner.submitForReview(metaForm.value.cid, metaForm.value.title, description, donateEther, { value: amount });
+            await deSciPrintWithSigner.replyNew(props.prevCID, metaForm.value.cid, metaForm.value.title, description, donateEther, { value: amount });
             submitSucceed.value = true;
             submitFailed.value = false;
         } catch (error) {
@@ -108,6 +129,13 @@
 display: flex;
 flex-direction: column;
 align-items: center;
+}
+
+.divider {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
 }
 
 h2 {
@@ -161,6 +189,10 @@ div[v-if="submitFailed"] {
 
 .text-danger, .text-success {
   margin-left: 10px;
+}
+
+h2 {
+  text-align: center; /* Add this line to center align h2 */
 }
   
 </style>

@@ -54,6 +54,12 @@ const router = createRouter({
           name: 'desci-review-paper',
           component: () => import('@/pages/deSci/ReviewerPages/SubmitCommentPage.vue'),
           props: true
+        },
+        {
+          path: 'replynew/:address/:prevCID',
+          name: 'desci-replynew',
+          component: () => import('@/pages/deSci/ReplyNewPage.vue'),
+          props: true
         }
       ]
     },
