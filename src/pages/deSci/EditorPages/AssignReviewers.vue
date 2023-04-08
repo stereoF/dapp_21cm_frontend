@@ -1,9 +1,18 @@
 <template>
   <div class="container">
       <!-- Title -->
-      <h1>Journal name: {{ journalName }}</h1>
-      <h5>Paper Title: {{ paperInfo.keyInfo }}</h5>
-      <h5>Paper CID: {{ paperId }}</h5>
+      <h2>Journal name: {{ journalName }}</h2>
+      <!-- <h5>Paper Title: {{ paperInfo.keyInfo }}</h5>
+      <h5>Paper CID: {{ paperId }}</h5> -->
+      <div>
+        <Suspense>
+          <PaperInfo :address="$props.address" :cid="$props.paperId"/>
+          <template #fallback>
+            Loading...
+          </template>
+        </Suspense>
+      </div>
+      <div class="divider"></div>
       <div v-if="!isEditor" class="text-danger">You are not the editor of this journal</div>
       <div v-else>
         <form @submit.prevent="contractCall">
@@ -28,6 +37,7 @@ import { defineComponent, ref, reactive } from 'vue';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import ManagerFields from '@/components/ManagerFields.vue';
+import PaperInfo from '@/pages/deSci/PaperInfo.vue'
 import { useProvider } from '@/scripts/ethProvider'
 
 export default defineComponent({
@@ -50,7 +60,7 @@ export default defineComponent({
         const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
         const paperId = ref(props.paperId)
         const editors = reactive(await deSciPrint.editors());
-        const paperInfo = reactive(await deSciPrint.deSciPrints(paperId.value));
+        // const paperInfo = reactive(await deSciPrint.deSciPrints(paperId.value));
 
         const journalName = ref(await deSciPrint.name());
         const reviewers = reactive(await deSciPrint.getReviewers(paperId.value));
@@ -89,8 +99,8 @@ export default defineComponent({
 
         return {
             journalName,
-            paperId,
-            paperInfo,
+            // paperId,
+            // paperInfo,
             contractCall,
             submitFailed,
             submitSucceed,
@@ -99,7 +109,19 @@ export default defineComponent({
             isEditor
         };
     },
-    components: { ManagerFields }
+    components: { ManagerFields, PaperInfo }
 })
 
 </script>
+
+<style scoped>
+h2 {
+  text-align: center; /* Add this line to center align h2 */
+}
+.divider {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+}
+</style>
