@@ -79,7 +79,7 @@
         let amount = donateEther.add(gasEther);
 
         try {
-            await deSciPrintWithSigner.submitForReview(metaForm.value.cid, metaForm.value.title, description, donateEther, { value: amount });
+            await deSciPrintWithSigner.submitForReview(metaForm.value.cid, metaForm.value.title, JSON.stringify(description), donateEther, { value: amount });
             submitSucceed.value = true;
             submitFailed.value = false;
         } catch (error) {
