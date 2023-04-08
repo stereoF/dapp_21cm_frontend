@@ -32,6 +32,11 @@ const router = createRouter({
       component: () => import('@/components/SuspenseWraper.vue'),
       children: [
         {
+          path: '/recentPublished',
+          name: 'recent-published',
+          component: () => import('@/pages/deSci/RecentPublished.vue')
+        },
+        {
           path: 'submit/:address',
           name: 'desci-submit',
           component: () => import('@/pages/deSci/SubmitPage.vue'),

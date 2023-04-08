@@ -37,8 +37,8 @@ import { defineComponent, ref, reactive } from 'vue';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import ManagerFields from '@/components/ManagerFields.vue';
-import PaperInfo from '@/pages/deSci/PaperInfo.vue'
-import { useProvider } from '@/scripts/ethProvider'
+import PaperInfo from '@/pages/deSci/PaperInfo.vue';
+import { useProvider } from '@/scripts/ethProvider';
 
 export default defineComponent({
     name: "AssignReviewers",
