@@ -139,7 +139,7 @@ export default defineComponent({
       };
 
       try {
-        await prePrintWithSigner.submit(cid.value, title.value, description);
+        await prePrintWithSigner.submit(cid.value, title.value, JSON.stringify(description));
         submitSucceed.value = true;
         submitFailed.value = false;
       } catch (error) {
