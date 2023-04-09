@@ -19,10 +19,10 @@
       <el-button class="mr-3 btn btn-success" type="success" :disabled="fileListEmpty" @click="submitUpload">
           Get the CID
       </el-button>
-      <div class="form-check form-switch">
+      <!-- <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" v-model="uploadToServer" id="uploadToServerSwitch" checked>
           <label class="form-check-label" for="uploadToServerSwitch">Upload to server</label>
-      </div>
+      </div> -->
     </div>
   </el-upload>
   <div v-if="cidMismatch" class="error-message mt-3">
