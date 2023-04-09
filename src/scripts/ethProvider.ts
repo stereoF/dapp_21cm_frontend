@@ -88,5 +88,7 @@ const switchNetwork = async () => {
 export async function useProvider() {
   // await switchNetwork();
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  return { provider }
+  await provider.send("eth_requestAccounts", []);
+  const signer = provider.getSigner();
+  return { provider, signer }
 }

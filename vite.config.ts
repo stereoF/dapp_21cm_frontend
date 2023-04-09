@@ -28,12 +28,12 @@ export default defineConfig({
 //     //    }
 //     // }
 //  },
-  optimizeDeps: {
-    esbuildOptions: {
-      supported: { 
-        bigint: true 
-      }
-    }
-  }
+  // optimizeDeps: {
+  //   esbuildOptions: {
+  //     supported: { 
+  //       bigint: true 
+  //     }
+  //   }
+  // }
 })
 
