@@ -44,14 +44,6 @@ const switchNetwork = async () => {
 }
 
 
-
-export async function useProvider() {
-  await switchNetwork();
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  return { provider }
-}
-
-
 // const switchNetwork = async () => {
 //   if (window.ethereum) {
 //     try {
@@ -92,3 +84,9 @@ export async function useProvider() {
 //     alert('MetaMask is not installed. Please install it to use this app: https://metamask.io/download.html');
 //   } 
 // }
+
+export async function useProvider() {
+  await switchNetwork();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  return { provider }
+}

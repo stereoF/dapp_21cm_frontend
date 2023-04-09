@@ -2,16 +2,7 @@
   <div class="container">
     <h2 class="title">Recent Published</h2>
       <div v-for="(item, index) in items" :key="index">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">{{ item.title }}</h5>
-            <a :href="item.link" class="btn btn-primary">Read More</a>
-          </div>
-          <div v-if="item.description">
-            <div class="divider"></div>
-            <p class="card-text">{{ item.description.substring(0, 250) }}{{ item.description.length > 250 ? '...' : '' }}</p>
-          </div>
-        </div>
+        <PaperCard :item="item" />
       </div>
     </div>
 </template>
@@ -21,6 +12,7 @@
   import { ethers } from "ethers";
   import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
   import { useProvider } from '@/scripts/ethProvider';
+  import PaperCard from '@/components/PaperCard.vue';
 
   const { provider } = await useProvider();
   const deSciPrint = new ethers.Contract(
@@ -32,7 +24,7 @@
 
   let journalName = ref(await deSciPrint.name());
   let printCnt = await deSciPrint.deSciPrintCnt();
-  let showCnt = ref(10);
+  let showCnt = ref(1000);
   let startIndex = ref(printCnt - showCnt.value);
   if (startIndex.value < 0) {
     startIndex.value = 0;

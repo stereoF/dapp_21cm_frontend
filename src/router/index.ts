@@ -27,15 +27,23 @@ const router = createRouter({
       ]
     },
     {
-      path: '/desci',
-      name: 'desci-assign',
+      path: '/preprint',
+      // name: 'desci-assign',
       component: () => import('@/components/SuspenseWraper.vue'),
       children: [
         {
-          path: '/recentPublished',
+          path: 'recentPublished/:address',
           name: 'recent-published',
-          component: () => import('@/pages/deSci/RecentPublished.vue')
+          component: () => import('@/pages/prePrint/RecentPublished.vue'),
+          props: true
         },
+      ]
+    },
+    {
+      path: '/desci',
+      // name: 'desci-assign',
+      component: () => import('@/components/SuspenseWraper.vue'),
+      children: [
         {
           path: 'submit/:address',
           name: 'desci-submit',
