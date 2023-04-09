@@ -51,7 +51,7 @@
         }
     );
 
-    const { provider } = await useProvider();
+    const { provider, signer } = await useProvider();
     const deSciPrint = new ethers.Contract(
         props.address,
         DeSciPrint.abi,
@@ -71,7 +71,7 @@
             'abstract': metaForm.value.abstract
         };
 
-        const signer = provider.getSigner();
+        // const signer = provider.getSigner();
         const deSciPrintWithSigner = deSciPrint.connect(signer);
         
         let donateEther = ethers.utils.parseEther(metaForm.value.donate);

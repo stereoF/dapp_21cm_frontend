@@ -124,8 +124,7 @@ export default defineComponent({
 
     const contractCall = async () => {
       // const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const { provider } = await useProvider();
-      const signer = provider.getSigner();
+      const { provider, signer } = await useProvider();
       const prePrint = new ethers.Contract(
         props.address || '',
         PrePrintTrack.abi,

@@ -69,8 +69,7 @@ export default defineComponent({
         ]
 
         // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const { provider } = await useProvider();
-        const signer = provider.getSigner();
+        const { provider, signer } = await useProvider();
 
         const deSciPrint = new ethers.Contract(
             props.address,

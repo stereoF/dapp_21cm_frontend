@@ -65,7 +65,7 @@
         }
     );
 
-    const { provider } = await useProvider();
+    const { provider, signer } = await useProvider();
     const deSciPrint = new ethers.Contract(
         props.address,
         DeSciPrint.abi,
@@ -78,7 +78,8 @@
 
     let printInfo = reactive(await deSciPrint.deSciPrints(props.prevCID));
 
-    const yourAddress = ref(await provider.getSigner().getAddress());
+    // const yourAddress = ref(await provider.getSigner().getAddress());
+    const yourAddress = ref(signer.getAddress());
     const isAuthor = ref(yourAddress.value === printInfo.submitAddress);
 
     let process = reactive(await deSciPrint.deSciProcess(props.prevCID));
@@ -92,7 +93,7 @@
             'abstract': metaForm.value.abstract
         };
 
-        const signer = provider.getSigner();
+        // const signer = provider.getSigner();
         const deSciPrintWithSigner = deSciPrint.connect(signer);
         
         let donateEther = ethers.utils.parseEther(metaForm.value.donate);

@@ -56,7 +56,7 @@ export default defineComponent({
         const reviewerFields = ref();
 
         // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const { provider } = await useProvider();
+        const { provider, signer } = await useProvider();
         const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
         const paperId = ref(props.paperId)
         const editors = reactive(await deSciPrint.editors());
@@ -65,7 +65,7 @@ export default defineComponent({
         const journalName = ref(await deSciPrint.name());
         const reviewers = reactive(await deSciPrint.getReviewers(paperId.value));
 
-        const yourAddress = ref(await provider.getSigner().getAddress());
+        const yourAddress = ref(signer.getAddress());
         const isEditor = ref(editors.includes(yourAddress.value));
 
         let submitFailed = ref(false);
@@ -79,11 +79,11 @@ export default defineComponent({
 
           try {
             if (submitList.length > 0) {
-              await deSciPrint.connect(provider.getSigner()).reviewerAssign(paperId.value, submitList);
+              await deSciPrint.connect(signer).reviewerAssign(paperId.value, submitList);
             };
 
             if (removeList.length > 0) {
-              await deSciPrint.connect(provider.getSigner()).removeReviewer(paperId.value, removeList);
+              await deSciPrint.connect(signer).removeReviewer(paperId.value, removeList);
             };
             
             submitSucceed.value = true;

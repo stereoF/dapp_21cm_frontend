@@ -40,12 +40,12 @@ export default defineComponent({
         const editorFields = ref();
 
         // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const { provider } = await useProvider();
+        const { provider, signer } = await useProvider();
         const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
         const title = ref(await deSciPrint.name());
         const editors = reactive(await deSciPrint.editors());
 
-        const yourAddress = ref(await provider.getSigner().getAddress());
+        const yourAddress = ref(signer.getAddress());
         const isOwner = ref(await deSciPrint.owner() === yourAddress.value);
         // const isOwner = computed(async () => (await deSciPrint.owner()) === yourAddress.value);
 
@@ -60,11 +60,11 @@ export default defineComponent({
 
           try {
             if (submitList.length > 0) {
-              await deSciPrint.connect(provider.getSigner()).pushEditors(submitList);
+              await deSciPrint.connect(signer).pushEditors(submitList);
             };
 
             if (removeList.length > 0) {
-              await deSciPrint.connect(provider.getSigner()).removeEditor(removeList);
+              await deSciPrint.connect(signer).removeEditor(removeList);
             };
             
             submitSucceed.value = true;
