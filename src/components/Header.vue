@@ -14,7 +14,7 @@
 </template>
 
 
-<script setup>
+<script lang="ts" setup>
 import WalletConnector from './WalletConnector.vue'
 </script>
 
