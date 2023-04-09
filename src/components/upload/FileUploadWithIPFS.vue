@@ -33,16 +33,15 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import type { UploadUserFile,UploadInstance } from 'element-plus'
-// import * as IPFS from 'ipfs-core'
+import * as IPFS from 'ipfs-core'
 import { onMounted } from 'vue'
 import axios from 'axios'
-import { useUploadStore } from '../store/upload' 
-// import { useIPFS } from '@/scripts/ipfs'
+import { useUploadStore } from '../../store/upload' 
 
 const store = useUploadStore()
 
 // const ipfs = await IPFS.create()
-// const ipfs = IPFS.create()
+const ipfs = IPFS.create()
 const fileList = ref<UploadUserFile[]>([])
 const upload = ref<UploadInstance>()
 
@@ -68,24 +67,66 @@ const fileListEmpty = computed(() => {
 const uploadToServer = ref(true)
 
 const submitUpload = async () => {
-  let fileObjectsArray = fileList.value.map((file) => {
+  // console.log(fileList.value)
+  let cid
+  try {
+    let fileObjectsArray = fileList.value.map((file) => {
+      // console.log(file.raw?.webkitRelativePath)
         return {
+          // path: file.name,
           path: file.raw?.webkitRelativePath,
           content: file.raw
         }
     }) as any
-    // let cid2 = useIPFS(fileObjectsArray);
-    console.log(cid2)
+  
+  // console.log(fileObjectsArray)
+    let result:any[] = []
+    for await (const resultPart of (await ipfs).addAll(fileObjectsArray, { wrapWithDirectory: true })) {
+      result.push(resultPart)
+      // console.log(resultPart.path, resultPart.cid.toString())
+    }
+    cid = result.find(e => e.path==="").cid.toString()
+    // console.log(cid)
+    // console.log(result)
+  } catch (error) {
+    console.log(error)
+  }
+  if (uploadToServer.value) {
     let formData:any = new FormData();  
     fileList.value.forEach(file => {formData.append('files', file.raw)}) 
 
     let res = await axios.post("http://127.0.0.1:8000/files/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
-    let cid = res.data.cid
-    fileList.value = []
-    store.setCid(cid)
+    let cid2 = res.data.cid
+    if (cid === cid2) {
+      fileList.value = []
+    }
+  }
+  if (!uploadToServer.value) {
+      fileList.value = []
+  }
+  // emits('cid-value', cid)
+  store.setCid(cid)
+  // upload.value!.submit()
+
 }
 
+// const handleSuccess = (response: any, file: any, fileList: any) => {
+//   console.log(response)
+//   console.log(file)
+//   console.log(fileList)
+//   emits('cid-value', response.cid)
+// }
+
 </script>
+
+
+<!-- <style>
+.error-message {
+  color: red;
+}
+</style> -->
+
+
         
 <style scoped>
 .error-message {

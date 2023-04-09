@@ -8,10 +8,10 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  define: {
-    "process.env": {},
-    global: 'globalThis'
-  },
+  // define: {
+  //   "process.env": {},
+  //   global: 'globalThis'
+  // },
   // plugins: [vue(), WindiCSS()],
   plugins: [vue()],
   resolve: {

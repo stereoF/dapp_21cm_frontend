@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
 import FileUpload from '@/components/FileUpload.vue'
-import MetaInfo from './MetaInfoForm.vue'
+// import MetaInfo from './MetaInfoForm.vue'
 
 </script>
 
