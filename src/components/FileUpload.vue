@@ -75,7 +75,6 @@ const submitUpload = async () => {
         }
     }) as any
     // let cid2 = useIPFS(fileObjectsArray);
-    console.log(cid2)
     let formData:any = new FormData();  
     fileList.value.forEach(file => {formData.append('files', file.raw)}) 
 
