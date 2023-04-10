@@ -1,10 +1,10 @@
 <template>
     <div class="common-layout">
-      <el-container>
-        <el-header>
+      <a-layout>
+        <a-layout-header>
             <h2>Journal: {{ journalName }}</h2>
-        </el-header>
-        <el-main>
+        </a-layout-header>
+        <a-layout-content>
           <div v-if="!isAuthor" class="text-danger">You are not the author of this paper</div>
           <div v-else-if="process.processStatus != 5" class="text-danger">The status of this paper must be NeedRevise</div>
           <div v-else class="container">
@@ -37,8 +37,8 @@
                 </form>
             </div>
           </div>
-        </el-main>
-      </el-container>
+        </a-layout-content>
+      </a-layout>
     </div>
   </template>
   

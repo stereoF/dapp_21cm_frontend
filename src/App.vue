@@ -1,15 +1,15 @@
 <template>
   <div class="common-layout">
-    <el-container>
-      <el-header>
+    <a-layout>
+      <a-layout-header>
         <Header/>
-      </el-header>
-      <el-main>
+      </a-layout-header>
+      <a-layout-content>
         <div class="container">
           <router-view></router-view>
         </div>
-      </el-main>
-    </el-container>
+      </a-layout-content>
+    </a-layout>
   </div>
 </template>
 

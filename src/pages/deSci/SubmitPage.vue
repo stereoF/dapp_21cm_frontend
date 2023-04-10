@@ -1,7 +1,7 @@
 <template>
     <div class="common-layout">
-      <el-container>
-        <el-main>
+      <a-layout>
+        <a-layout-content>
           <div class="container">
             <div class="file-upload-container">
               <FileUpload/>
@@ -28,8 +28,8 @@
                 </form>
             </div>
           </div>
-        </el-main>
-      </el-container>
+        </a-layout-content>
+      </a-layout>
     </div>
   </template>
   

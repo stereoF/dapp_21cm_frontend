@@ -3,14 +3,14 @@
       <div class="form-group d-flex align-items-center">
         <label for="cid" class="mr-2">CID:</label>
         <input type="text" id="cid" class="form-control mr-2" v-model="cid" placeholder="Select directory to get CID" />
-        <el-select v-model="value" class="m-2" placeholder="Select" size="large">
-          <el-option
+        <a-select v-model="value" class="m-2" placeholder="Select" size="large">
+          <a-option
               v-for="item in options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
           />
-        </el-select>
+        </a-select>
         <button id="contractCall" type="submit" class="btn btn-primary ml-2">Submit</button>
       </div>
       <div class="row mt-2">
@@ -119,7 +119,7 @@ export default defineComponent({
   width: 500px; /* cid的长度再增加一些 */
 }
 
-.el-select {
+.a-select {
   width: 150px;
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
-    <el-container>
-      <el-main>
+    <a-layout>
+      <a-layout-content>
         <div v-if="!isReviewer" class="text-danger">You are not the reviewer of this paper</div>
         <div v-else>
           <div>
@@ -31,8 +31,8 @@
             <h3 class="title">You have already submitted your review comments.</h3>
           </div>
         </div>
-      </el-main>
-    </el-container>
+      </a-layout-content>
+    </a-layout>
   </div>
 </template>
   
