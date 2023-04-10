@@ -65,15 +65,15 @@ const fileListEmpty = computed(() => {
   return fileList.value.length > 0 ? false : true
 })
 
-const uploadToServer = ref(true)
+// const uploadToServer = ref(true)
 
 const submitUpload = async () => {
-  let fileObjectsArray = fileList.value.map((file) => {
-        return {
-          path: file.raw?.webkitRelativePath,
-          content: file.raw
-        }
-    }) as any
+  // let fileObjectsArray = fileList.value.map((file) => {
+  //       return {
+  //         path: file.raw?.webkitRelativePath,
+  //         content: file.raw
+  //       }
+  //   }) as any
     // let cid2 = useIPFS(fileObjectsArray);
     let formData:any = new FormData();  
     fileList.value.forEach(file => {formData.append('files', file.raw)}) 
