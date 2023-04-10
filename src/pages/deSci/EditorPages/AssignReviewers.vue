@@ -65,7 +65,7 @@ export default defineComponent({
         const journalName = ref(await deSciPrint.name());
         const reviewers = reactive(await deSciPrint.getReviewers(paperId.value));
 
-        const yourAddress = ref(signer.getAddress());
+        const yourAddress = ref(await signer.getAddress());
         const isEditor = ref(editors.includes(yourAddress.value));
 
         let submitFailed = ref(false);

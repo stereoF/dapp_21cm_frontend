@@ -45,7 +45,7 @@ export default defineComponent({
         const title = ref(await deSciPrint.name());
         const editors = reactive(await deSciPrint.editors());
 
-        const yourAddress = ref(signer.getAddress());
+        const yourAddress = ref(await signer.getAddress());
         const isOwner = ref(await deSciPrint.owner() === yourAddress.value);
         // const isOwner = computed(async () => (await deSciPrint.owner()) === yourAddress.value);
 
