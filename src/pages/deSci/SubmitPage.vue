@@ -70,7 +70,13 @@ const contractCall = async (data: any) => {
 
   try {
       await deSciPrintWithSigner.submitForReview(data.cid, data.title, JSON.stringify(description), donateEther, { value: amount });
-      router.push({ name: 'success-submit' });
+      router.push({ name: 'success-submit', 
+          query: { 
+              title: 'You have successfully submitted your paper',
+              subtitle: ' It may take a few minutes for the blockchain to package the transaction containing your paper, \
+              so please wait a moment before confirming whether your paper appears on the blockchain.'
+          } 
+      });
   } catch (error: any) {
       console.error(error);
       Notification.error({

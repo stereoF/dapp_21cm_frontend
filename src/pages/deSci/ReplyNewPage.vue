@@ -1,142 +1,123 @@
 <template>
-    <div class="common-layout">
-      <a-layout>
-        <a-layout-header>
-            <h2>Journal: {{ journalName }}</h2>
-        </a-layout-header>
-        <a-layout-content>
-          <div v-if="!isAuthor" class="text-danger">You are not the author of this paper</div>
-          <div v-else-if="process.processStatus != 5" class="text-danger">The status of this paper must be NeedRevise</div>
-          <div v-else class="container">
-            <div>
-                <h3>Previous version of the paper:</h3>
-                <PaperInfo :cid="props.prevCID" :address="props.address" />
-            </div>
-            <div class="divider"></div>
-            <div class="file-upload-container">
-              <FileUpload/>
-              <!-- <div v-if="cidValue">CID Value: {{cidValue}}</div> -->
-            </div>
-            <div class="container mt-4">
-                <form @submit.prevent="contractCall">
-                    <Suspense>
-                        <MetaForm :address="props.address" ref="metaForm"/>
-                        <template #fallback>
-                            Loading...
-                        </template>
-                    </Suspense>
-                    <div class="row mt-2">
-                        <div class="col-12 col-sm-8">
-                            <button id="contractCall" type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                        <div class="col-12 col-sm-4 mt-2 mt-sm-0">
-                            <div v-if="submitFailed" class="text-danger">Submit failed</div>
-                            <div v-if="submitSucceed" class="text-success">Submit succeed</div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+  <div class="common-layout">
+    <a-layout>
+      <a-layout-header>
+        <h2>Journal: {{ journalName }}</h2>
+      </a-layout-header>
+      <a-layout-content>
+        <div v-if="!isAuthor" class="text-danger">You are not the author of this paper</div>
+        <div v-else-if="process.processStatus != 5" class="text-danger">The status of this paper must be NeedRevise</div>
+        <div v-else class="container">
+          <div>
+            <h3>Previous version of the paper:</h3>
+            <PaperInfo :cid="props.prevCID" :address="props.address" />
           </div>
-        </a-layout-content>
-      </a-layout>
-    </div>
-  </template>
+          <a-divider />
+          <a-space direction="vertical">
+            <a-row justify="center">
+              <div>
+                <FileUpload />
+              </div>
+            </a-row>
+            <div>
+              <MetaInfo contractType="desci" :donate="Number(donate)" :gas="Number(gas)" @submit="contractCall" />
+            </div>
+          </a-space>
+        </div>
+      </a-layout-content>
+    </a-layout>
+  </div>
+</template>
   
 <script lang="ts" setup>
-    import { ethers } from "ethers";
-    import { ref, reactive } from 'vue';
-    import FileUpload from '@/components/FileUpload.vue'
-    import MetaForm from "./MetaForm.vue";
-    import PaperInfo from "./PaperInfo.vue";
-    import { useProvider } from '@/scripts/ethProvider'
-    import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
+import { ethers } from "ethers";
+import { ref, reactive } from 'vue';
+import { Notification } from '@arco-design/web-vue';
+import { useRouter } from 'vue-router'
+import FileUpload from '@/components/FileUpload.vue'
+import MetaInfo from '@/components/MetaInfo.vue';
+import PaperInfo from "./PaperInfo.vue";
+import { useProvider } from '@/scripts/ethProvider'
+import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 
-    const metaForm = ref();
-    const props = defineProps(
-        {
-            address: {
-                type: String,
-                required: true,
-            },
-            prevCID: {
-                type: String,
-                required: true,
-            },
-        }
-    );
+const props = defineProps(
+  {
+    address: {
+      type: String,
+      required: true,
+    },
+    prevCID: {
+      type: String,
+      required: true,
+    },
+  }
+);
 
-    const { provider, signer } = await useProvider();
-    const deSciPrint = new ethers.Contract(
-        props.address,
-        DeSciPrint.abi,
-        provider
-    );
+const { provider, signer } = await useProvider();
+const router = useRouter()
+const deSciPrint = new ethers.Contract(
+  props.address,
+  DeSciPrint.abi,
+  provider
+);
 
-    let journalName = ref(await deSciPrint.name());
-    let submitFailed = ref(false);
-    let submitSucceed = ref(false);
+let journalName = ref(await deSciPrint.name());
+let printInfo = reactive(await deSciPrint.deSciPrints(props.prevCID));
 
-    let printInfo = reactive(await deSciPrint.deSciPrints(props.prevCID));
+const yourAddress = ref(await signer.getAddress());
+const isAuthor = ref(yourAddress.value === printInfo.submitAddress);
 
-    // const yourAddress = ref(await provider.getSigner().getAddress());
-    const yourAddress = ref(signer.getAddress());
-    const isAuthor = ref(yourAddress.value === printInfo.submitAddress);
+let process = reactive(await deSciPrint.deSciProcess(props.prevCID));
 
-    let process = reactive(await deSciPrint.deSciProcess(props.prevCID));
+let minGas = await deSciPrint.gasFee(0);
+let minDonate = await deSciPrint.gasFee(4);
 
-    const contractCall = async () => {
-        // const deSciPrintWithSigner = deSciPrint.connect(signer);
-        const description = {
-            'authors': metaForm.value.authors,
-            'fields': metaForm.value.fields,
-            'title': metaForm.value.title,
-            'abstract': metaForm.value.abstract
-        };
+let minGasEth = ethers.utils.formatEther(minGas);
+let minDonateEth = ethers.utils.formatEther(minDonate);
 
-        // const signer = provider.getSigner();
-        const deSciPrintWithSigner = deSciPrint.connect(signer);
-        
-        let donateEther = ethers.utils.parseEther(metaForm.value.donate);
-        let gasEther = ethers.utils.parseEther(metaForm.value.gas);
-        let amount = donateEther.add(gasEther);
+const donate = ref(minDonateEth);
+const gas = ref(minGasEth);
 
-        try {
-            await deSciPrintWithSigner.replyNew(props.prevCID, metaForm.value.cid, metaForm.value.title, description, donateEther, { value: amount });
-            submitSucceed.value = true;
-            submitFailed.value = false;
-        } catch (error) {
-            console.error(error);
-            submitFailed.value = true;
-            submitSucceed.value = false;
-        } finally {
-            metaForm.value.authors.forEach((author: { name: string; email: string; workplace: string; }) => {
-                author.name = '';
-                author.email = '';
-                author.workplace = '';
-            });
-            metaForm.value.fields.forEach((field: { field: string; }) => {
-                field.field = '';
-            });
-            metaForm.value.title = '';
-            metaForm.value.abstract = '';
-            metaForm.value.cid = '';
-        }
-    };
+const contractCall = async (data: any) => {
+  const description = {
+    'authors': data.authors,
+    'fields': data.fields,
+    'title': data.title,
+    'abstract': data.abstract
+  };
+
+  const deSciPrintWithSigner = deSciPrint.connect(signer);
+
+  let donateEther = ethers.utils.parseEther(data.donate.toString());
+  let gasEther = ethers.utils.parseEther(data.gas.toString());
+  let amount = donateEther.add(gasEther);
+
+  try {
+    await deSciPrintWithSigner.submitForReview(data.cid, data.title, JSON.stringify(description), donateEther, { value: amount });
+    router.push({
+      name: 'success-submit',
+      query: {
+        title: 'You have successfully submitted the edited paper',
+        subtitle: ' It may take a few minutes for the blockchain to package the transaction containing your paper, \
+              so please wait a moment before confirming whether your paper appears on the blockchain.'
+      }
+    });
+  } catch (error: any) {
+    console.error(error);
+    Notification.error({
+      title: 'Submit Failed',
+      content: error.message,
+    });
+  }
+};
 
 </script>
   
 <style scoped>
 .container {
-display: flex;
-flex-direction: column;
-align-items: center;
-}
-
-.divider {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ccc;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h2 {
@@ -176,24 +157,8 @@ div[v-if="submitFailed"] {
   margin-top: 16px;
 }
 
-.row .col-12.col-sm-8 {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.row .col-12.col-sm-4 {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.text-danger, .text-success {
-  margin-left: 10px;
-}
-
 h2 {
-  text-align: center; /* Add this line to center align h2 */
+  text-align: center;
+  /* Add this line to center align h2 */
 }
-  
 </style>
