@@ -8,10 +8,11 @@
         <div v-if="!isAuthor" class="text-danger">You are not the author of this paper</div>
         <div v-else-if="process.processStatus != 5" class="text-danger">The status of this paper must be NeedRevise</div>
         <div v-else class="container">
-          <div>
-            <h3>Previous version of the paper:</h3>
-            <PaperInfo :cid="props.prevCID" :address="props.address" />
-          </div>
+          <a-collapse>
+          <a-collapse-item header="Previous version of the paper:" key="1">
+            <PaperInfo :address="props.address" :paperCID="props.prevCID" />
+          </a-collapse-item>
+          </a-collapse>
           <a-divider />
           <a-space direction="vertical">
             <a-row justify="center">

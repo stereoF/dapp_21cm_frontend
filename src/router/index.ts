@@ -50,7 +50,7 @@ const router = createRouter({
       component: () => import('@/components/SuspenseWraper.vue'),
       children: [
         {
-          path: '/test/:address',
+          path: '/test/:address/:paperCID',
           component: () => import('@/components/InTest/TestPage.vue'),
           props: true
         },
