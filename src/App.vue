@@ -2,7 +2,7 @@
   <div class="common-layout">
     <a-layout>
       <a-layout-header>
-        <Header/>
+        <Header />
       </a-layout-header>
       <a-layout-content>
         <div class="container">

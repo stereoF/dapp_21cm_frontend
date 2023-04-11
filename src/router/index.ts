@@ -11,6 +11,11 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/successsubmit',
+      name: 'success-submit',
+      component: () => import('@/pages/results/SuccessSubmit.vue')
+    },
+    {
       path: '/preprint/upload',
       name: 'preprint-upload',
       // route level code-splitting
@@ -44,6 +49,11 @@ const router = createRouter({
       // name: 'desci-assign',
       component: () => import('@/components/SuspenseWraper.vue'),
       children: [
+        {
+          path: '/test/:address',
+          component: () => import('@/components/InTest/TestPage.vue'),
+          props: true
+        },
         {
           path: 'submit/:address',
           name: 'desci-submit',
