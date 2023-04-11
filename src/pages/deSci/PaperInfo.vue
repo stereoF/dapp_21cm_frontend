@@ -1,27 +1,12 @@
 <template>
-  <a-typography>
-    <a-typography-title>
-      {{ printInfo.keyInfo }}
-    </a-typography-title>
-    <a-typography-paragraph>
-      <ul>
-        <li>
-          Status: {{ status }}
-        </li>
-        <li>
-          Submit Time: {{ printInfo.submitTime ? new Date(printInfo.submitTime * 1000).toLocaleString() : '' }}
-        </li>
-        </ul>
-        <a-collapse>
-          <a-collapse-item header="Web3 Information Related to this paper" key="1">
-            <p>Paper CID: {{ props.paperCID }}</p>
-            <p>Submitted by: {{ printInfo.submitAddress }}</p>
-            <p>Editor: {{ process.editor === ethers.constants.AddressZero ? '' : process.editor }}</p>
-            <p>Reviewers: {{ reviewers.join(', ') }}</p>
-          </a-collapse-item>
-        </a-collapse>
-    </a-typography-paragraph>
-  </a-typography>
+  <a-space direction="vertical" size="large" fill>
+    <a-descriptions :data="basicInfo" title="User Info" />
+    <a-collapse>
+      <a-collapse-item header="Web3 Information Related to this paper" key="1">
+        <a-descriptions :data="web3Info" title="Web3 Info" />
+      </a-collapse-item>
+    </a-collapse>
+  </a-space>
 </template>
 
 <script lang="ts" setup>
@@ -54,11 +39,38 @@ const contract = new ethers.Contract(
 );
 const { ProcessStatus } = useStatus();
 
-let printInfo = reactive(await contract.deSciPrints(props.paperCID));
-let process = reactive(await contract.deSciProcess(props.paperCID));
+
+let printInfo = await contract.deSciPrints(props.paperCID);
+let process = await contract.deSciProcess(props.paperCID);
 let reviewers = await contract.getReviewers(props.paperCID);
 let processIndex: number = process.processStatus;
 
 reviewers = reactive(reviewers ? reviewers : []);
-let status = ref(ProcessStatus[processIndex]);
+let status = ProcessStatus[processIndex];
+
+const basicInfo = [
+  {
+    label: 'Status',
+    value: status
+  },
+  {
+    label: 'Submit Time',
+    value: printInfo.submitTime ? new Date(printInfo.submitTime * 1000).toLocaleString() : '',
+  }
+]
+
+const web3Info = [{
+  label: 'Paper CID',
+  value: props.paperCID,
+}, {
+  label: 'Submitted by',
+  value: printInfo.submitAddress,
+}, {
+  label: 'Editor',
+  value: process.editor === ethers.constants.AddressZero ? '' : process.editor,
+}, {
+  label: 'Reviewers',
+  value: reviewers.join(', '),
+}]
+
 </script>
