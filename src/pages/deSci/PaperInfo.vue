@@ -45,6 +45,37 @@ let process = await contract.deSciProcess(props.paperCID);
 let reviewers = await contract.getReviewers(props.paperCID);
 let processIndex: number = process.processStatus;
 
+let reviewerCnt = reviewers.length;
+let reviewInfo = reviewers.map(async (reviewer: string, index: number) => {
+  return {
+    reviewer: reviewer,
+    ...await(contract.deSciReviews(props.paperCID, reviewer)),
+  }
+  // return {
+  //   reviewer: await contract.deSciReviews(props.paperCID, reviewer),
+  // }
+})
+
+let reviseCnt = 0;
+let passCnt = 0;
+let rejectCnt = 0;
+let replyCnt = 0;
+let reviewResult = await Promise.all(reviewInfo);
+
+for (let i = 0; i < reviewResult.length; i++) {
+  if (reviewResult[i].reviewerStatus === 1) {
+    reviseCnt++;
+  } else if (reviewResult[i].reviewerStatus === 3) {
+    passCnt++;
+  } else if (reviewResult[i].reviewerStatus === 2) {
+    rejectCnt++;
+  }
+
+  if (reviewResult[i].reply !== '') {
+    replyCnt++;
+  }
+}
+
 reviewers = reactive(reviewers ? reviewers : []);
 let status = ProcessStatus[processIndex];
 
@@ -60,21 +91,46 @@ const basicInfo = [
   {
     label: 'Submit Time',
     value: printInfo.submitTime ? new Date(printInfo.submitTime * 1000).toLocaleString() : '',
-  }
+  },
+  {
+    label: 'Number of Reviewers',
+    value: reviewerCnt,
+  },
+  {
+    label: 'Number of Revise',
+    value: reviseCnt,
+  },
+  {
+    label: 'Number of Pass',
+    value: passCnt,
+  },
+  {
+    label: 'Number of Reject',
+    value: rejectCnt,
+  },
+  {
+    label: 'Number of Reply',
+    value: replyCnt,
+  },
 ]
 
-const web3Info = [{
-  label: 'Paper CID',
-  value: props.paperCID,
-}, {
-  label: 'Submitted by',
-  value: printInfo.submitAddress,
-}, {
-  label: 'Editor',
-  value: process.editor === ethers.constants.AddressZero ? '' : process.editor,
-}, {
-  label: 'Reviewers',
-  value: reviewers.join(', '),
-}]
+const web3Info = [
+  {
+    label: 'Paper CID',
+    value: props.paperCID,
+  },
+  {
+    label: 'Submitted by',
+    value: printInfo.submitAddress,
+  },
+  {
+    label: 'Editor',
+    value: process.editor === ethers.constants.AddressZero ? '' : process.editor,
+  },
+  {
+    label: 'Reviewers',
+    value: reviewers.join(', '),
+  }
+]
 
 </script>
