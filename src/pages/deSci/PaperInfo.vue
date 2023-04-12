@@ -1,6 +1,6 @@
 <template>
   <a-space direction="vertical" size="large" fill>
-    <a-descriptions :data="basicInfo" title="User Info" />
+    <a-descriptions :data="basicInfo" title="Basic Info" />
     <a-collapse>
       <a-collapse-item header="Web3 Information Related to this paper" key="1">
         <a-descriptions :data="web3Info" title="Web3 Info" />
@@ -49,6 +49,10 @@ reviewers = reactive(reviewers ? reviewers : []);
 let status = ProcessStatus[processIndex];
 
 const basicInfo = [
+  {
+    label: 'Title',
+    value: printInfo.keyInfo,
+  },
   {
     label: 'Status',
     value: status

@@ -5,123 +5,121 @@
       <!-- <h5>Paper Title: {{ paperInfo.keyInfo }}</h5>
       <h5>Paper CID: {{ paperId }}</h5> -->
       <div>
-        <Suspense>
-          <PaperInfo :address="$props.address" :cid="$props.paperId"/>
-          <template #fallback>
-            Loading...
-          </template>
-        </Suspense>
+          <Suspense>
+              <PaperInfo :address="$props.address" :paperCID="$props.paperId" />
+              <template #fallback>
+                  <a-space size="large">
+                      <a-spin :size="32" />
+                  </a-space>
+              </template>
+          </Suspense>
       </div>
-      <div class="divider"></div>
-      <div v-if="!isEditor" class="text-danger">You are not the editor of this journal</div>
+      <a-divider />
+      <div v-if="!isEditor">
+          <a-alert type="warning">You are not the editor of this journal.</a-alert>
+      </div>
       <div v-else>
-        <form @submit.prevent="contractCall">
-          <!-- <ManagerFields field-name="Editor" :fields="editors.map(editor => ({field: editor}))"/> -->
-          <ManagerFields field-name="Reviewer" :fields="reviewers.map((editor: any) => ({field: editor}))" ref="reviewerFields"/>
-          <div class="row mt-2">
-            <div class="col-12 col-sm-8">
-              <button id="contractCall" type="submit" class="btn btn-primary">Submit</button>
-            </div>
-            <div class="col-12 col-sm-4 mt-2 mt-sm-0">
-              <div v-if="submitFailed" class="text-danger">Submit failed</div>
-              <div v-if="submitSucceed" class="text-success">Submit succeed</div>
-            </div>
-          </div>
-        </form>    
-      </div>    
+          <ManagerFields field-name="Reviewer" :fields="reviewers.map((reviewer: any) => ({ field: reviewer }))"
+              @submit="contractCall" />
+      </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue';
 import { ethers } from "ethers";
+import { Notification } from '@arco-design/web-vue';
+import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import ManagerFields from '@/components/ManagerFields.vue';
 import PaperInfo from '@/pages/deSci/PaperInfo.vue';
 import { useProvider } from '@/scripts/ethProvider';
+import { useRouter } from 'vue-router'
+
 
 export default defineComponent({
-    name: "AssignReviewers",
-    props: {
-        address: {
-            type: String,
-            required: true
-        },
-        paperId: {
-            type: String,
-            required: true
-        },
-    },
-    async setup(props) {
-        const reviewerFields = ref();
+  name: "AssignReviewers",
+  props: {
+      address: {
+          type: String,
+          required: true
+      },
+      paperId: {
+          type: String,
+          required: true
+      },
+  },
+  async setup(props) {
+      const router = useRouter();
+      const { provider, signer } = await useProvider();
+      const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
+      const paperId = ref(props.paperId)
+      const editors = reactive(await deSciPrint.editors());
 
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const { provider, signer } = await useProvider();
-        const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
-        const paperId = ref(props.paperId)
-        const editors = reactive(await deSciPrint.editors());
-        // const paperInfo = reactive(await deSciPrint.deSciPrints(paperId.value));
+      const journalName = ref(await deSciPrint.name());
+      const reviewers = reactive(await deSciPrint.getReviewers(paperId.value));
 
-        const journalName = ref(await deSciPrint.name());
-        const reviewers = reactive(await deSciPrint.getReviewers(paperId.value));
+      const yourAddress = ref(await signer.getAddress());
+      const isEditor = ref(editors.includes(yourAddress.value));
 
-        const yourAddress = ref(await signer.getAddress());
-        const isEditor = ref(editors.includes(yourAddress.value));
 
-        let submitFailed = ref(false);
-        let submitSucceed = ref(false);
-
-        const contractCall = async () => {
-          let reviewersFromField = reviewerFields.value.fields.map((field: any) => field.field);
+      const contractCall = async (data: any) => {
+          let reviewersFromField = data.fields.map((field: any) => field.field);
           let intersection = reviewers.filter((v: any) => reviewersFromField.includes(v));
           let submitList = reviewersFromField.filter((v: any) => !intersection.includes(v));
           let removeList = reviewers.filter((v: any) => !intersection.includes(v));
 
           try {
-            if (submitList.length > 0) {
-              await deSciPrint.connect(signer).reviewerAssign(paperId.value, submitList);
-            };
+              if (submitList.length == 0 && removeList.length == 0) {
+                  Notification.info({
+                      title: 'No change',
+                      content: 'You have not changed the reviewers.',
+                  });
+                  return;
+              }
 
-            if (removeList.length > 0) {
-              await deSciPrint.connect(signer).removeReviewer(paperId.value, removeList);
-            };
-            
-            submitSucceed.value = true;
-            submitFailed.value = false;
+              if (submitList.length > 0) {
+                  await deSciPrint.connect(signer).reviewerAssign(paperId.value, submitList);
+              };
 
-          } catch (error) {
-            console.error(error);
-            submitFailed.value = true;
-            submitSucceed.value = false;
-          } 
+              if (removeList.length > 0) {
+                  await deSciPrint.connect(signer).removeReviewer(paperId.value, removeList);
+              };
 
-        };
+              router.push({
+                  name: 'success-submit',
+                  query: {
+                      title: 'You have successfully assigned reviewers to this paper!',
+                      subtitle: ' It may take a few minutes for the blockchain to package the transaction, \
+          so please wait a moment before confirming whether the reviewers has changed.'
+                  }
+              });
 
-        return {
-            journalName,
-            // paperId,
-            // paperInfo,
-            contractCall,
-            submitFailed,
-            submitSucceed,
-            reviewers,
-            reviewerFields,
-            isEditor
-        };
-    },
-    components: { ManagerFields, PaperInfo }
+          } catch (error: any) {
+              console.error(error);
+              Notification.error({
+                title: 'Submit Failed',
+                content: error.message,
+            });
+          }
+
+      };
+
+      return {
+          journalName,
+          contractCall,
+          reviewers,
+          isEditor
+      };
+  },
+  components: { ManagerFields, PaperInfo, IconExclamationCircleFill  }
 })
 
 </script>
 
 <style scoped>
 h2 {
-  text-align: center; /* Add this line to center align h2 */
-}
-.divider {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ccc;
-  width: 100%;
+  text-align: center;
+  /* Add this line to center align h2 */
 }
 </style>

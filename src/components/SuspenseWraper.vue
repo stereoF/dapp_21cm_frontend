@@ -1,9 +1,11 @@
 <template>
     <div>
         <Suspense>
-            <router-view/>
+            <router-view />
             <template #fallback>
-                Loading...
+                <a-space size="large">
+                    <a-spin :size="32" />
+                </a-space>
             </template>
         </Suspense>
     </div>

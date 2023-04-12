@@ -1,68 +1,125 @@
 <template>
-    <a-typography>
-        <a-typography-title>
-            {{ printInfo.keyInfo }}
-        </a-typography-title>
-        <a-typography-paragraph>
-            <ul>
-                <li>
-                    Paper CID: {{ props.paperCID }}                   
-                </li>
-                <li>
-                    Submitted by: {{ printInfo.submitAddress }}
-                </li>
-                <li>
-                    Submit Time: {{ printInfo.submitTime ? new Date(printInfo.submitTime * 1000).toLocaleString() : '' }}
-                </li>
-                <li>
-                    Editor: {{ process.editor === ethers.constants.AddressZero ? '' : process.editor }}
-                </li>
-                <li>
-                    Reviewers: {{ reviewers.join(', ') }}
-                </li>
-                <li>
-                    Status: {{ status }}
-                </li>
-            </ul>
-        </a-typography-paragraph>
-</a-typography>
+    <div class="container">
+        <!-- Title -->
+        <h2>Journal name: {{ journalName }}</h2>
+        <!-- <h5>Paper Title: {{ paperInfo.keyInfo }}</h5>
+        <h5>Paper CID: {{ paperId }}</h5> -->
+        <div>
+            <Suspense>
+                <PaperInfo :address="$props.address" :paperCID="$props.paperId" />
+                <template #fallback>
+                    <a-space size="large">
+                        <a-spin :size="32" />
+                    </a-space>
+                </template>
+            </Suspense>
+        </div>
+        <a-divider />
+        <div v-if="!isEditor">
+            <a-alert type="warning">You are not the editor of this journal.</a-alert>
+        </div>
+        <div v-else>
+            <ManagerFields field-name="Reviewer" :fields="reviewers.map((reviewer: any) => ({ field: reviewer }))"
+                @submit="contractCall" />
+        </div>
+    </div>
 </template>
-
-<script lang="ts" setup>
-import { ref, reactive } from 'vue';
+  
+<script lang="ts">
+import { defineComponent, ref, reactive } from 'vue';
 import { ethers } from "ethers";
-import { useProvider } from '@/scripts/ethProvider'
-import contractABI from "@/contracts/desci/DeSciPrint.json";
-import { useStatus } from '@/scripts/status';
+import { Notification } from '@arco-design/web-vue';
+import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';
+import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
+import ManagerFields from '@/components/ManagerFields.vue';
+import PaperInfo from '@/pages/deSci/PaperInfo.vue';
+import { useProvider } from '@/scripts/ethProvider';
+import { useRouter } from 'vue-router'
 
-const props = defineProps(
-  {
-    address: {
-      type: String,
-      required: true,
+
+export default defineComponent({
+    name: "AssignReviewers",
+    props: {
+        address: {
+            type: String,
+            required: true
+        },
+        paperId: {
+            type: String,
+            required: true
+        },
     },
-    paperCID: {
-      type: String,
-      required: true,
+    async setup(props) {
+        const router = useRouter();
+        const { provider, signer } = await useProvider();
+        const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
+        const paperId = ref(props.paperId)
+        const editors = reactive(await deSciPrint.editors());
+
+        const journalName = ref(await deSciPrint.name());
+        const reviewers = reactive(await deSciPrint.getReviewers(paperId.value));
+
+        const yourAddress = ref(await signer.getAddress());
+        const isEditor = ref(editors.includes(yourAddress.value));
+
+
+        const contractCall = async (data: any) => {
+            let reviewersFromField = data.fields.map((field: any) => field.field);
+            let intersection = reviewers.filter((v: any) => reviewersFromField.includes(v));
+            let submitList = reviewersFromField.filter((v: any) => !intersection.includes(v));
+            let removeList = reviewers.filter((v: any) => !intersection.includes(v));
+
+            try {
+                if (submitList.length == 0 && removeList.length == 0) {
+                    Notification.info({
+                        title: 'No change',
+                        content: 'You have not changed the reviewers.',
+                    });
+                    return;
+                }
+
+                if (submitList.length > 0) {
+                    await deSciPrint.connect(signer).reviewerAssign(paperId.value, submitList);
+                };
+
+                if (removeList.length > 0) {
+                    await deSciPrint.connect(signer).removeReviewer(paperId.value, removeList);
+                };
+
+                router.push({
+                    name: 'success-submit',
+                    query: {
+                        title: 'You have successfully assigned reviewers to this paper!',
+                        subtitle: ' It may take a few minutes for the blockchain to package the transaction, \
+            so please wait a moment before confirming whether the reviewers has changed.'
+                    }
+                });
+
+            } catch (error: any) {
+                console.error(error);
+                Notification.error({
+                  title: 'Submit Failed',
+                  content: error.message,
+              });
+            }
+
+        };
+
+        return {
+            journalName,
+            contractCall,
+            reviewers,
+            isEditor
+        };
     },
-  }
-);
+    components: { ManagerFields, PaperInfo, IconExclamationCircleFill  }
+})
 
-
-const { provider } = await useProvider();
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const contract = new ethers.Contract(
-      props.address,
-      contractABI.abi,
-      provider
-    );
-    const { ProcessStatus } = useStatus();
-
-    let printInfo = reactive(await contract.deSciPrints(props.paperCID));
-    let process = reactive(await contract.deSciProcess(props.paperCID));
-    let reviewers = await contract.getReviewers(props.paperCID);
-    let processIndex: number = process.processStatus;
-
-    reviewers =  reactive(reviewers ? reviewers : []);
-    let status = ref(ProcessStatus[processIndex]);
 </script>
+  
+<style scoped>
+h2 {
+    text-align: center;
+    /* Add this line to center align h2 */
+}
+</style>

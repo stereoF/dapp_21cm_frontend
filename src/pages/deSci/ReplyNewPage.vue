@@ -5,8 +5,12 @@
         <h2>Journal: {{ journalName }}</h2>
       </a-layout-header>
       <a-layout-content>
-        <div v-if="!isAuthor" class="text-danger">You are not the author of this paper</div>
-        <div v-else-if="process.processStatus != 5" class="text-danger">The status of this paper must be NeedRevise</div>
+        <div v-if="!isAuthor">
+          <a-alert type="warning">You are not the author of this paper.</a-alert>
+        </div>
+        <div v-else-if="process.processStatus != 5" class="text-danger">
+          <a-alert type="warning">The status of this paper must be NeedRevise.</a-alert>
+        </div>
         <div v-else class="container">
           <a-collapse>
           <a-collapse-item header="Previous version of the paper:" key="1">
@@ -40,6 +44,7 @@ import MetaInfo from '@/components/MetaInfo.vue';
 import PaperInfo from "./PaperInfo.vue";
 import { useProvider } from '@/scripts/ethProvider'
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
+import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';
 
 const props = defineProps(
   {

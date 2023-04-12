@@ -2,27 +2,33 @@
   <div class="common-layout">
     <a-layout>
       <a-layout-content>
-        <div v-if="!isReviewer" class="text-danger">You are not the reviewer of this paper</div>
+        <div v-if="!isReviewer">
+          <a-alert type="warning">You are not the reviewer of this paper.</a-alert>
+        </div>
         <div v-else>
           <div>
             <Suspense>
-              <PaperInfo :address="$props.address" :cid="$props.paperCID"/>
+              <PaperInfo :address="$props.address" :paperCID="$props.paperCID" />
               <template #fallback>
-                Loading...
+                <a-space size="large">
+                  <a-spin :size="32" />
+                </a-space>
               </template>
             </Suspense>
           </div>
-          <div class="divider"></div>
+          <a-divider />
           <div v-if="reviewStatus == 0">
             <h3 class="title">Upload your review comments and make your decision</h3>
             <div class="container">
               <div class="file-upload-container">
-                <FileUpload/>
+                <FileUpload />
               </div>
               <Suspense>
-                <SubmitCommentCID :address="$props.address" :paperCID="$props.paperCID"/>
+                <SubmitCommentCID :address="$props.address" :paperCID="$props.paperCID" />
                 <template #fallback>
-                  Loading...
+                  <a-space size="large">
+                    <a-spin :size="32" />
+                  </a-space>
                 </template>
               </Suspense>
             </div>
@@ -40,21 +46,21 @@
 import { ref } from 'vue';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
-
 import FileUpload from '@/components/FileUpload.vue'
 import SubmitCommentCID from './SubmitCommentCID.vue'
 import PaperInfo from '@/pages/deSci/PaperInfo.vue'
 import { useProvider } from '@/scripts/ethProvider'
+import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';
 
 const props = defineProps(
   {
     address: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     paperCID: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
   }
 );
@@ -83,14 +89,5 @@ const reviewStatus = ref(reviewInfo.value.reviewerStatus);
 .title {
   text-align: center;
 }
-
-.divider {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ccc;
-  width: 100%;
-}
-
-
 </style>
   
