@@ -2,6 +2,11 @@
   <a-space direction="vertical" size="large" fill>
     <a-descriptions :data="basicInfo" title="Basic Info" />
     <a-collapse>
+      <a-collapse-item header="Information about review comments and replies" key="2">
+        <div v-for="result in reviewResultShow">
+          <a-descriptions :data="result.obj" :title="result.name" />
+        </div>
+      </a-collapse-item>
       <a-collapse-item header="Web3 Information Related to this paper" key="1">
         <a-descriptions :data="web3Info" title="Web3 Info" />
       </a-collapse-item>
@@ -61,6 +66,7 @@ let passCnt = 0;
 let rejectCnt = 0;
 let replyCnt = 0;
 let reviewResult = await Promise.all(reviewInfo);
+let reviewResultShow: any = []
 
 for (let i = 0; i < reviewResult.length; i++) {
   if (reviewResult[i].reviewerStatus === 1) {
@@ -74,6 +80,35 @@ for (let i = 0; i < reviewResult.length; i++) {
   if (reviewResult[i].reply !== '') {
     replyCnt++;
   }
+
+  // reviewResultShow.push( Object.entries(reviewResult[i]).map(([key, value]) => ({label: key, value})))
+  reviewResultShow.push(
+    {
+      name: reviewResult[i].reviewer,
+      obj: [
+        {
+          label: "comment",
+          value: reviewResult[i].comment,
+        },
+        {
+          label: "reply",
+          value: reviewResult[i].reply,
+        },
+        {
+          label: "reviewerStatus",
+          value: reviewResult[i].reviewerStatus,
+        },
+        {
+          label: "commentTime",
+          value: reviewResult[i].commentTime != 0 ? new Date(reviewResult[i].commentTime * 1000).toLocaleString() : '',
+        },
+        {
+          label: "replyTime",
+          value: reviewResult[i].replyTime != 0 ? new Date(reviewResult[i].replyTime * 1000).toLocaleString() : '',
+        },
+      ]
+    }
+  )
 }
 
 reviewers = reactive(reviewers ? reviewers : []);
@@ -90,7 +125,7 @@ const basicInfo = [
   },
   {
     label: 'Submit Time',
-    value: printInfo.submitTime ? new Date(printInfo.submitTime * 1000).toLocaleString() : '',
+    value: printInfo.submitTime != 0 ? new Date(printInfo.submitTime * 1000).toLocaleString() : '',
   },
   {
     label: 'Number of Reviewers',
