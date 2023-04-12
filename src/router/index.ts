@@ -42,8 +42,8 @@ const router = createRouter({
       component: () => import('@/components/SuspenseWraper.vue'),
       children: [
         {
-          path: 'test/:address/:paperId',
-          component: () => import('@/pages/desci/AuthorPages/ReplyCommentPage.vue'),
+          path: 'test/:address/:paperCID',
+          component: () => import('@/pages/deSci/AuthorPages/ReplyCommentPage.vue'),
           props: true
         },
         {
