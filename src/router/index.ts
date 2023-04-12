@@ -42,14 +42,14 @@ const router = createRouter({
       component: () => import('@/components/SuspenseWraper.vue'),
       children: [
         {
-          path: '/test/:address/:paperId',
-          component: () => import('@/components/InTest/TestPage.vue'),
+          path: 'test/:address/:paperId',
+          component: () => import('@/pages/desci/AuthorPages/ReplyCommentPage.vue'),
           props: true
         },
         {
           path: 'submit/:address',
           name: 'desci-submit',
-          component: () => import('@/pages/deSci/SubmitPage.vue'),
+          component: () => import('@/pages/deSci/AuthorPages/SubmitPage.vue'),
           props: true
         },
         {
@@ -73,7 +73,7 @@ const router = createRouter({
         {
           path: 'replynew/:address/:prevCID',
           name: 'desci-replynew',
-          component: () => import('@/pages/deSci/ReplyNewPage.vue'),
+          component: () => import('@/pages/deSci/AuthorPages/ReplyNewPage.vue'),
           props: true
         }
       ]

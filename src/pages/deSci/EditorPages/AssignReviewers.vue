@@ -53,7 +53,7 @@ import { Notification } from '@arco-design/web-vue';
 import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import ManagerFields from '@/components/ManagerFields.vue';
-import SubmitCommentCID from '../ReviewerPages/SubmitCommentCID.vue';
+import SubmitCommentCID from '../SubmitCommentCID.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import PaperInfo from '@/pages/deSci/PaperInfo.vue';
 import { useProvider } from '@/scripts/ethProvider';

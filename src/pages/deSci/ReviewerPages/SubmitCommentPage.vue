@@ -34,7 +34,7 @@
             </div>
           </div>
           <div v-else>
-            <h3 class="title">You have already submitted your review comments.</h3>
+            <a-alert type="warning">You have already submitted your review comments.</a-alert>
           </div>
         </div>
       </a-layout-content>
@@ -47,7 +47,7 @@ import { ref } from 'vue';
 import { ethers } from "ethers";
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import FileUpload from '@/components/FileUpload.vue'
-import SubmitCommentCID from './SubmitCommentCID.vue'
+import SubmitCommentCID from '../SubmitCommentCID.vue'
 import PaperInfo from '@/pages/deSci/PaperInfo.vue'
 import { useProvider } from '@/scripts/ethProvider'
 import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';

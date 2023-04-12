@@ -13,9 +13,9 @@
         </div>
         <div v-else class="container">
           <a-collapse>
-          <a-collapse-item header="Previous version of the paper:" key="1">
-            <PaperInfo :address="props.address" :paperCID="props.prevCID" />
-          </a-collapse-item>
+            <a-collapse-item header="Previous version of the paper:" key="1">
+              <PaperInfo :address="props.address" :paperCID="props.prevCID" />
+            </a-collapse-item>
           </a-collapse>
           <a-divider />
           <a-space direction="vertical">
@@ -41,7 +41,7 @@ import { Notification } from '@arco-design/web-vue';
 import { useRouter } from 'vue-router'
 import FileUpload from '@/components/FileUpload.vue'
 import MetaInfo from '@/components/MetaInfo.vue';
-import PaperInfo from "./PaperInfo.vue";
+import PaperInfo from "../PaperInfo.vue";
 import { useProvider } from '@/scripts/ethProvider'
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';
