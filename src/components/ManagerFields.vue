@@ -5,12 +5,12 @@
                 <a-input v-model="field.field" :placeholder="$props.fieldName" />
                 <a-button @click="deleteField(index)" :style="{ marginLeft: '10px' }">Delete</a-button>
             </a-form-item>
-            <a-col :offset="10">
+            <a-col :offset="2">
                 <a-button @click="addField">Add {{ $props.fieldName }}</a-button>
             </a-col>
         </a-space>
         <a-divider />
-        <a-col :offset="16">
+        <a-col :offset="6">
             <a-form-item extra="click to comfirm the editors">
                 <a-button html-type="submit">Submit</a-button>
             </a-form-item>

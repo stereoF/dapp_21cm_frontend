@@ -35,8 +35,8 @@ const props = defineProps(
   }
 );
 
-const { provider, signer } = await useProvider();
 const router = useRouter()
+const { provider, signer } = await useProvider();
 const deSciPrint = new ethers.Contract(
   props.address,
   DeSciPrint.abi,
