@@ -75,7 +75,7 @@ export default defineComponent({
 
         const contractCall = async () => {
             try {
-                await deSciPrintWithSigner.reviewPrint(props.paperCID, cid, form.value);
+                await deSciPrintWithSigner.reviewPrint(props.paperCID, cid.value, form.value);
                 // Notification.success({
                 //     title: 'Succeed',
                 //     content: 'You successfully submit your comment',

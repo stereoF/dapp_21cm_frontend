@@ -31,11 +31,11 @@ import { ref, reactive, onMounted } from 'vue';
 import { Notification } from '@arco-design/web-vue';
 import { useRouter } from 'vue-router'
 import FileUpload from '@/components/FileUpload.vue'
-import MetaInfo from '@/components/MetaInfo.vue';
 import PaperInfo from "../PaperInfo.vue";
 import { useProvider } from '@/scripts/ethProvider'
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';
+import { usePaperInfo } from "@/scripts/paperInfo";
 
 const props = defineProps(
     {
@@ -63,6 +63,8 @@ let printInfo = reactive(await deSciPrint.deSciPrints(props.paperCID));
 
 const yourAddress = ref(await signer.getAddress());
 const isAuthor = ref(yourAddress.value === printInfo.submitAddress);
+
+const { reviewResultShow } = await usePaperInfo(props.address, props.paperCID);
 
 </script>
 

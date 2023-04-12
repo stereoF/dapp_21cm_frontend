@@ -39,6 +39,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
     let rejectCnt = 0;
     let replyCnt = 0;
     let reviewResult = await Promise.all(reviewInfo);
+
     let reviewResultShow: any = [];
 
     for (let i = 0; i < reviewResult.length; i++) {
