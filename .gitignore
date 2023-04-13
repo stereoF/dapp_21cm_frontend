@@ -28,3 +28,4 @@ coverage
 *.sw?
 
 src/contracts
+src/scripts/test

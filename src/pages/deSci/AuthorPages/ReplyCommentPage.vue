@@ -9,14 +9,30 @@
                     <a-alert type="warning">You are not the author of this paper.</a-alert>
                 </div>
                 <div v-else class="container">
-                    <PaperInfo :address="props.address" :paperCID="props.paperCID" ref="paperInfo"/>
+                    <PaperInfo :address="props.address" :paperCID="props.paperCID" ref="paperInfo" />
                     <a-divider />
-                    <a-tabs default-active-key="2">
-                        <a-tab-pane key="1" title="Tab 1">
-                            <FileUpload />
-                        </a-tab-pane>
-                        <a-tab-pane key="2" title="Tab 2">
-                            <FileUpload />
+                    <a-tabs default-active-key="1">
+                        <a-tab-pane v-for="(result, index) in reviewResultShow" :key="index" :title="result.name">
+                            <a-split
+                                :style="{ height: '600px', width: '100%', minWidth: '500px', border: '1px solid var(--color-border)' }"
+                                v-model:size="size" min="80px">
+                                <template #first>
+                                    <a-descriptions :data="result.obj" size="large" title="Review Info" :column="1" />
+                                </template>
+                                <template #second>
+                                        <a-form :model="form" @submit="contractCall(index)">
+                                            <br/>
+                                            <a-form-item>
+                                                <FileUpload />
+                                            </a-form-item>
+                                            <a-form-item>
+                                                <a-input :style="{ width: '450px' }" v-model="form.cid"
+                                                    placeholder="Select directory to get CID" />
+                                                <a-button html-type="submit">Submit</a-button>
+                                            </a-form-item>
+                                        </a-form>
+                                </template>
+                            </a-split>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -36,6 +52,11 @@ import { useProvider } from '@/scripts/ethProvider'
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';
 import { usePaperInfo } from "@/scripts/paperInfo";
+import { storeToRefs } from 'pinia';
+import { useUploadStore } from '@/store/upload';
+
+
+let size = ref(0.3)
 
 const props = defineProps(
     {
@@ -50,6 +71,14 @@ const props = defineProps(
     }
 );
 
+
+const store = useUploadStore();
+const { cid } = storeToRefs(store);
+
+const form = reactive({
+    cid: cid,
+})
+
 const { provider, signer } = await useProvider();
 const router = useRouter()
 const deSciPrint = new ethers.Contract(
@@ -57,6 +86,7 @@ const deSciPrint = new ethers.Contract(
     DeSciPrint.abi,
     provider
 );
+const deSciPrintWithSigner = deSciPrint.connect(signer);
 
 let journalName = ref(await deSciPrint.name());
 let printInfo = reactive(await deSciPrint.deSciPrints(props.paperCID));
@@ -65,6 +95,33 @@ const yourAddress = ref(await signer.getAddress());
 const isAuthor = ref(yourAddress.value === printInfo.submitAddress);
 
 const { reviewResultShow } = await usePaperInfo(props.address, props.paperCID);
+
+const contractCall = async (index: number) => {
+    try {
+        let reviewerAddress = reviewResultShow[index].name;
+        await deSciPrintWithSigner.replyReviewInfo(props.paperCID, reviewerAddress, cid.value);
+        // Notification.success({
+        //     title: 'Succeed',
+        //     content: 'You successfully submit your comment',
+        // })
+        router.push({
+            name: 'success-submit',
+            query: {
+                title: 'You have successfully submitted your comment',
+                subtitle: ' It may take a few minutes for the blockchain to package the transaction containing your paper, \
+              so please wait a moment before confirming whether your comment appears on the blockchain.'
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        Notification.success({
+            title: 'Failed!',
+            content: 'You failed to submit your comment',
+        })
+    } finally {
+        cid.value = '';
+    }
+};
 
 </script>
 

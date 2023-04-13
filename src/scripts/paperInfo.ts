@@ -15,7 +15,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
         contractABI.abi,
         provider
     );
-    const { ProcessStatus } = useStatus();
+    const { ProcessStatus, ReviewerStatus } = useStatus();
 
 
     let printInfo = await contract.deSciPrints(paperCID);
@@ -70,7 +70,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
                     },
                     {
                         label: "reviewerStatus",
-                        value: reviewResult[i].reviewerStatus,
+                        value: ReviewerStatus[reviewResult[i].reviewerStatus],
                     },
                     {
                         label: "commentTime",
