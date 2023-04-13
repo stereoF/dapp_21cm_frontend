@@ -20,16 +20,18 @@
 
 <script lang="ts">
 import { ref, computed } from 'vue';
-import axios from 'axios';
+// import axios from 'axios';
 import { useUploadStore } from '@/store/upload' 
 import type { FileItem } from '@arco-design/web-vue';
+import { useAxios } from '@/scripts/httpclient';
 
 export default {
   setup() {
       const uploadRef = ref();
       const files = ref<FileItem[]>([]);
       const fileList = ref([]);
-      const store = useUploadStore()
+      const store = useUploadStore();
+      const { axiosInstance} = useAxios();
 
       const fileListEmpty = computed(() => {
           return fileList.value.length > 0 ? false : true
@@ -40,7 +42,8 @@ export default {
           let formData:any = new FormData();  
           files.value.forEach(file => {formData.append('files', file.file)}) 
 
-          let res = await axios.post("http://127.0.0.1:8000/files/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
+          let res = await axiosInstance.post("/files/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
+          // let res = await axios.post("http://127.0.0.1:8000/files/uploadfiles/", formData, {headers: {'Content-Type': 'multipart/form-data'}})
           let cid = res.data.cid
           store.setCid(cid)
           fileList.value = []
