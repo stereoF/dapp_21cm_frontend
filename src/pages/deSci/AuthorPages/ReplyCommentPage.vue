@@ -11,6 +11,7 @@
                 <div v-else class="container">
                     <PaperInfo :address="props.address" :paperCID="props.paperCID" ref="paperInfo" />
                     <a-divider />
+                    <h3>Choose the reviewer comment you want to reply</h3>
                     <a-tabs default-active-key="1">
                         <a-tab-pane v-for="(result, index) in reviewResultShow" :key="index" :title="result.name">
                             <a-split
@@ -126,7 +127,7 @@ const contractCall = async (index: number) => {
 </script>
 
 <style scoped>
-h2 {
+h2,h3 {
     text-align: center;
     /* Add this line to center align h2 */
 }
