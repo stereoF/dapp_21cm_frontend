@@ -19,19 +19,23 @@
                                 v-model:size="size" min="80px">
                                 <template #first>
                                     <a-descriptions :data="result.obj" size="large" title="Review Info" :column="1" />
+                                    <a-link v-if="result.obj[0].value != ''" :href="VITE_IPFS_GATEWAY + result.obj[0].value"
+                                        target="_blank">
+                                        <a-button type="primary">View Comment</a-button>
+                                    </a-link>
                                 </template>
                                 <template #second>
-                                        <a-form :model="form" @submit="contractCall(index)">
-                                            <br/>
-                                            <a-form-item>
-                                                <FileUpload />
-                                            </a-form-item>
-                                            <a-form-item>
-                                                <a-input :style="{ width: '450px' }" v-model="form.cid"
-                                                    placeholder="Select directory to get CID" />
-                                                <a-button html-type="submit">Submit</a-button>
-                                            </a-form-item>
-                                        </a-form>
+                                    <a-form :model="form" @submit="contractCall(index)">
+                                        <br />
+                                        <a-form-item>
+                                            <FileUpload />
+                                        </a-form-item>
+                                        <a-form-item>
+                                            <a-input :style="{ width: '450px' }" v-model="form.cid"
+                                                placeholder="Select directory to get CID" />
+                                            <a-button html-type="submit">Submit</a-button>
+                                        </a-form-item>
+                                    </a-form>
                                 </template>
                             </a-split>
                         </a-tab-pane>
@@ -44,7 +48,7 @@
 
 <script lang="ts" setup>
 import { ethers } from "ethers";
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive } from 'vue';
 import { Notification } from '@arco-design/web-vue';
 import { useRouter } from 'vue-router'
 import FileUpload from '@/components/FileUpload.vue'
@@ -72,7 +76,7 @@ const props = defineProps(
     }
 );
 
-
+const VITE_IPFS_GATEWAY = import.meta.env.VITE_IPFS_GATEWAY;
 const store = useUploadStore();
 const { cid } = storeToRefs(store);
 
@@ -127,7 +131,8 @@ const contractCall = async (index: number) => {
 </script>
 
 <style scoped>
-h2,h3 {
+h2,
+h3 {
     text-align: center;
     /* Add this line to center align h2 */
 }

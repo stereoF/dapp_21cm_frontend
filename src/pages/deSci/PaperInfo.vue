@@ -1,10 +1,19 @@
 <template>
   <a-space direction="vertical" size="large" fill>
     <a-descriptions :data="basicInfo" title="Basic Info" />
+    <a-link :href="VITE_IPFS_GATEWAY + props.paperCID" target="_blank">
+      <a-button type="primary">View Paper</a-button>
+    </a-link>
     <a-collapse>
       <a-collapse-item header="Information about review comments and replies" key="2">
         <div v-for="result in reviewResultShow">
           <a-descriptions :data="result.obj" :title="result.name" />
+          <a-link v-if="result.obj[0].value != ''" :href="VITE_IPFS_GATEWAY + result.obj[0].value" target="_blank">
+            <a-button type="primary">View Comment</a-button>
+          </a-link>
+          <a-link v-if="result.obj[1].value != ''" :href="VITE_IPFS_GATEWAY + result.obj[1].value" target="_blank">
+            <a-button type="primary">View Reply</a-button>
+          </a-link>
         </div>
       </a-collapse-item>
       <a-collapse-item header="Web3 Information Related to this paper" key="1">
@@ -16,6 +25,8 @@
 
 <script lang="ts" setup>
 import { usePaperInfo } from '@/scripts/paperInfo';
+
+const VITE_IPFS_GATEWAY = import.meta.env.VITE_IPFS_GATEWAY;
 
 const props = defineProps(
   {
@@ -29,7 +40,6 @@ const props = defineProps(
     },
   }
 );
-
 
 const { web3Info, basicInfo, reviewResultShow } = await usePaperInfo(props.address, props.paperCID);
 
