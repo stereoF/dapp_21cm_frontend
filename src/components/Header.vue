@@ -1,12 +1,15 @@
 <template>
   <div class="menu">
     <img class="logo" src="../assets/logo.png" alt="logo">
-    <div class="menu-items">
-      <!-- <div class="menu-item">Home</div> -->
-      <router-link class="menu-item" to="/">Home</router-link>
-      <div class="menu-item">Journal Home</div>
-      <div class="menu-item">My Articles</div>
-    </div>
+    <div class="menu-demo">
+    <a-menu mode="horizontal" :default-selected-keys="['1']">
+      <a-menu-item key="1">
+        <router-link to="/">Home</router-link>
+      </a-menu-item>
+      <a-menu-item key="2">Journal Home</a-menu-item>
+      <a-menu-item key="3">My Papers</a-menu-item>
+    </a-menu>
+  </div>
     <div>
       <WalletConnector />
     </div>
@@ -27,7 +30,7 @@ import WalletConnector from './WalletConnector.vue'
   align-items: center;
   width: 100%;
   height: 60px;
-  background-color: #f2f2f2;
+  /* background-color: #f2f2f2; */
   padding: 0 20px;
 }
 
@@ -37,14 +40,16 @@ import WalletConnector from './WalletConnector.vue'
   background-color: #000;
 }
 
-.menu-items {
-  display: flex;
-  gap: 20px;
-}
+/* .menu-demo {
+  box-sizing: border-box;
+  width: 60%;
+  align-items: center;
+  padding: 20px; 
+  background-color: var(--color-neutral-2); 
+} */
 
-.menu-item {
-  font-size: 16px;
-  color: #000;
-  cursor: pointer;
+.menu-demo {
+  width: 20%;
+  background-color: var(--color-neutral-2); 
 }
 </style>

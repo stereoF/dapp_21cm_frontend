@@ -45,6 +45,7 @@ const router = createRouter({
         {
           path: 'replycomment/:address/:paperCID',
           component: () => import('@/pages/deSci/AuthorPages/ReplyCommentPage.vue'),
+          name: 'desci-reply-comment',
           props: true
         },
         {

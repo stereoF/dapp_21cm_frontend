@@ -16,7 +16,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
     );
     const { ProcessStatus, ReviewerStatus } = useStatus();
 
-
+    const journalEditors = await contract.editors();
     let printInfo = await contract.deSciPrints(paperCID);
     let process = await contract.deSciProcess(paperCID);
     let reviewers = await contract.getReviewers(paperCID);
@@ -122,6 +122,8 @@ export async function usePaperInfo(address: string, paperCID: string) {
         },
     ]
 
+    let paperEditor = process.editor === ethers.constants.AddressZero ? '' : process.editor;
+
     const web3Info = [
         {
             label: 'Paper CID',
@@ -133,7 +135,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
         },
         {
             label: 'Editor',
-            value: process.editor === ethers.constants.AddressZero ? '' : process.editor,
+            value: paperEditor,
         },
         {
             label: 'Reviewers',
@@ -144,6 +146,6 @@ export async function usePaperInfo(address: string, paperCID: string) {
     let prevCID = printInfo.prevCID;
     let nextCID = printInfo.nextCID;
 
-    return { basicInfo, web3Info, reviewResultShow, prevCID, nextCID }
+    return { basicInfo, web3Info, reviewResultShow, prevCID, nextCID, journalEditors, reviewers }
 
 }

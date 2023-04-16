@@ -40,6 +40,7 @@ import { watch } from 'vue';
 
 const router = useRouter();
 let route = useRoute();
+
 const VITE_IPFS_GATEWAY = import.meta.env.VITE_IPFS_GATEWAY;
 
 const props = defineProps(

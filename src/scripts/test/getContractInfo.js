@@ -33,7 +33,7 @@ async function getProcessInfo(paperCID) {
     console.log('processInfo: ', processInfo);
 }
 
-getPaperList(6);
+// getPaperList(0);
 // getAuthor('paperCID_1')
 // getProcessInfo('reply_new_1')
 
