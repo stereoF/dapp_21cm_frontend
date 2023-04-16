@@ -99,7 +99,7 @@ const contractCall = async (data: any) => {
   let amount = donateEther.add(gasEther);
 
   try {
-    await deSciPrintWithSigner.submitForReview(data.cid, data.title, JSON.stringify(description), donateEther, { value: amount });
+    await deSciPrintWithSigner.replyNew(props.prevCID, data.cid, data.title, JSON.stringify(description), donateEther, { value: amount });
     router.push({
       name: 'success-submit',
       query: {

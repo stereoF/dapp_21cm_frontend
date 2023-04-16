@@ -16,18 +16,19 @@ const router = createRouter({
       component: () => import('@/pages/results/SuccessSubmit.vue')
     },
     {
-      path: '/preprint/upload/:address',
-      name: 'preprint-upload',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('@/pages/prePrint/UploadPage.vue'),
-    },
-    {
       path: '/preprint',
       // name: 'desci-assign',
       component: () => import('@/components/SuspenseWraper.vue'),
       children: [
+        {
+          path: 'upload/:address',
+          name: 'preprint-upload',
+          // route level code-splitting
+          // this generates a separate chunk (About.[hash].js) for this route
+          // which is lazy-loaded when the route is visited.
+          component: () => import('@/pages/prePrint/UploadPage.vue'),
+          props: true
+        },
         {
           path: 'recentPublished/:address',
           name: 'recent-published',
