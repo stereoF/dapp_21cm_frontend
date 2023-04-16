@@ -20,12 +20,26 @@
         <a-descriptions :data="web3Info" title="Web3 Info" />
       </a-collapse-item>
     </a-collapse>
+    <a-button-group>
+      <a-button :disabled="prevCID === ''" type="primary" @click="toPrev">
+        <icon-left />
+        Prev Version
+      </a-button>
+      <a-button :disabled="nextCID === ''" type="primary" @click="toNext">
+        Next Version
+        <icon-right />
+      </a-button>
+    </a-button-group>
   </a-space>
 </template>
 
 <script lang="ts" setup>
 import { usePaperInfo } from '@/scripts/paperInfo';
+import { useRouter, useRoute } from 'vue-router';
+import { watch } from 'vue';
 
+const router = useRouter();
+let route = useRoute();
 const VITE_IPFS_GATEWAY = import.meta.env.VITE_IPFS_GATEWAY;
 
 const props = defineProps(
@@ -41,6 +55,36 @@ const props = defineProps(
   }
 );
 
-const { web3Info, basicInfo, reviewResultShow } = await usePaperInfo(props.address, props.paperCID);
+const { web3Info, basicInfo, reviewResultShow, prevCID, nextCID } = await usePaperInfo(props.address, props.paperCID);
+
+const toPrev = () => {
+  // console.log(prevCID)
+  router.push({
+    name: 'desci-paper-info',
+    params: {
+      address: props.address,
+      paperCID: prevCID,
+    },
+  });
+};
+
+const toNext = () => {
+  // console.log(nextCID)
+  router.push({
+    name: 'desci-paper-info',
+    params: {
+      address: props.address,
+      paperCID: nextCID,
+    },
+  });
+};
+
+watch(
+  () => route.params, (previous, current) => {
+    // console.log(`${previous} and ${current}`);
+    router.go(0)
+  },
+  { deep: true }
+)
 
 </script>

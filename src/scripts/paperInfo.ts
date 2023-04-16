@@ -2,7 +2,6 @@ import { ethers } from "ethers";
 import { useProvider } from '@/scripts/ethProvider'
 import contractABI from "@/contracts/desci/DeSciPrint.json";
 import { useStatus } from '@/scripts/status';
-import { reactive } from "vue";
 
 
 export async function usePaperInfo(address: string, paperCID: string) {
@@ -85,7 +84,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
         )
     }
 
-    reviewers = reactive(reviewers ? reviewers : []);
+    reviewers = reviewers ? reviewers : [];
     let status = ProcessStatus[processIndex];
 
     const basicInfo = [
@@ -142,6 +141,9 @@ export async function usePaperInfo(address: string, paperCID: string) {
         }
     ]
 
-    return { basicInfo, web3Info, reviewResultShow }
+    let prevCID = printInfo.prevCID;
+    let nextCID = printInfo.nextCID;
+
+    return { basicInfo, web3Info, reviewResultShow, prevCID, nextCID }
 
 }
