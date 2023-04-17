@@ -43,6 +43,12 @@ const router = createRouter({
       component: () => import('@/components/SuspenseWraper.vue'),
       children: [
         {
+          path: ':address',
+          name: 'desci-journal-home',
+          component: () => import('@/pages/deSci/JournalHomePage.vue'),
+          props: true
+        },
+        {
           path: 'replycomment/:address/:paperCID',
           component: () => import('@/pages/deSci/AuthorPages/ReplyCommentPage.vue'),
           name: 'desci-reply-comment',

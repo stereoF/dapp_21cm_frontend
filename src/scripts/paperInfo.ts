@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { useProvider } from '@/scripts/ethProvider'
 import contractABI from "@/contracts/desci/DeSciPrint.json";
 import { useStatus } from '@/scripts/status';
+import exp from "constants";
 
 
 export async function usePaperInfo(address: string, paperCID: string) {
@@ -148,4 +149,29 @@ export async function usePaperInfo(address: string, paperCID: string) {
 
     return { basicInfo, web3Info, reviewResultShow, prevCID, nextCID, journalEditors, reviewers }
 
-}
+};
+
+export async function usePaperListInfo(address: string, paperCIDs: string[]) {
+
+    const { provider } = await useProvider();
+    // const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(
+        address,
+        contractABI.abi,
+        provider
+    );
+
+
+    let paperListInfo = paperCIDs.map(async (paperCID: string, index: number) => {
+        let printInfo = await contract.deSciPrints(paperCID);
+
+        return {
+            paperCID: paperCID,
+            title: printInfo.keyInfo,
+        }
+    })
+
+    let paperListInfoShow = await Promise.all(paperListInfo);
+
+    return { paperListInfoShow }
+};

@@ -1,30 +1,48 @@
 <template>
   <div class="menu">
-    <div class="menu-demo">
-      <a-menu mode="horizontal" :default-selected-keys="['1']">
-        <a-menu-item key="0" :style="{ padding: 0, marginRight: '38px' }" disabled>
-          <div>
-            <img class="logo" src="../assets/logo.png" alt="logo">
-          </div>
-        </a-menu-item>
-        <a-menu-item key="1">
-          <router-link to="/">Home</router-link>
-        </a-menu-item>
-        <a-menu-item key="2">Journal Home</a-menu-item>
-        <a-menu-item key="3">My Papers</a-menu-item>
-      </a-menu>
-    </div>
     <div>
-      <Suspense>
-        <WalletConnector />
-      </Suspense>
+      <img class="logo" src="../assets/logo.png" alt="logo">
     </div>
+    <a-breadcrumb>
+      <a-breadcrumb-item>
+        <router-link to="/">Home</router-link>
+      </a-breadcrumb-item>
+      <a-breadcrumb-item>
+        <router-link :to="journalHomeLink">Journal Home</router-link>
+      </a-breadcrumb-item>
+      <a-breadcrumb-item>detail</a-breadcrumb-item>
+    </a-breadcrumb>
+    <div>
+    <Suspense>
+      <WalletConnector />
+    </Suspense>
   </div>
-</template>
+</div></template>
 
 
 <script lang="ts" setup>
 import WalletConnector from './WalletConnector.vue'
+import { useRoute } from 'vue-router';
+import { watch, reactive, ref } from 'vue';
+import { useAddress } from '@/store/address';
+import { storeToRefs } from 'pinia';
+
+const route = useRoute();
+const store = useAddress();
+const { address } = storeToRefs(store);
+// let address = ref(route.params.address);
+
+let journalHomeLink = reactive(address.value=='' ?  {name: 'home'} : {name: 'desci-journal-home', params: {address: address.value}})
+
+watch(
+  () => route.params, (current, previous) => {
+    if (typeof(current.address) === 'string') {
+      store.setAddress(current.address)
+    }
+  },
+  { deep: true }
+)
+
 </script>
 
 
@@ -46,17 +64,4 @@ import WalletConnector from './WalletConnector.vue'
   background-color: #000;
 }
 
-/* .menu-demo {
-  box-sizing: border-box;
-  width: 60%;
-  align-items: center;
-  padding: 20px; 
-  background-color: var(--color-neutral-2); 
-} */
-
-.menu-demo {
-  width: 80%;
-  background-color: var(--color-neutral-2);
-  align-items: center;
-}
 </style>

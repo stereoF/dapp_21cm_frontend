@@ -64,20 +64,50 @@ async function submit(paperCID) {
 };
 
 
+async function assignEditors() {
+    await deSciContract.connect(editorSigner).editorAssign(paperCID, [editorSigner.address]);
+    console.log('assign editors: ', [editorSigner.address]);
+}
+
+
 async function assignReviewers(paperCID) {
-    await submit(paperCID);
+    // await submit(paperCID);
     await deSciContract.connect(editorSigner).reviewerAssign(paperCID, [reviewer1Signer.address, reviewer2Signer.address]);
     console.log('assign reviewers: ', [reviewer1Signer.address, reviewer2Signer.address]);
 }
 
 async function reviewPrint(paperCID, reviewerSigner, comment, choice) {
-    await assignReviewers(paperCID);
+    // await assignReviewers(paperCID);
     await deSciContract.connect(reviewerSigner).reviewPrint(paperCID, comment, choice);
     console.log('review paper: ', paperCID);
 }
 
-reviewPrint(paperCID, reviewer1Signer, 'reviewer1', 1);
+async function prepare(startIndex, endIndex) {
 
+    for (let i = startIndex; i < endIndex; i++) {
+        paperCID = 'paperCID_' + i;
+        await submit(paperCID);
+    };
+
+    setTimeout(async () => {
+        for (let i = startIndex; i < endIndex; i++) {
+            paperCID = 'paperCID_' + i;
+            await assignReviewers(paperCID);
+        }
+    }, 10000);
+
+    setTimeout(async () => {
+        for (let i = startIndex; i < endIndex; i++) {
+            paperCID = 'paperCID_' + i;
+            await reviewPrint(paperCID, reviewer1Signer, 'reviewer1', 3);
+            await reviewPrint(paperCID, reviewer2Signer, 'reviewer2', 3);
+        }
+    }, 20000);
+
+}
+
+
+prepare(101, 111);
 
 
 

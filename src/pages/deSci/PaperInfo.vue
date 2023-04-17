@@ -1,4 +1,5 @@
 <template>
+  <br/>
   <a-space direction="vertical" size="large" fill>
     <a-descriptions :data="basicInfo" title="Basic Info" />
     <a-link :href="VITE_IPFS_GATEWAY + props.paperCID" target="_blank">

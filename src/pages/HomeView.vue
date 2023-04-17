@@ -7,14 +7,13 @@
     </router-link>
     <br/>
     <h4>DeSci Journals</h4>
-    <router-link to="/" v-for="(journal, index) in desSciJournals" :key="index">
+    <router-link :to="{ name: 'desci-journal-home', params: { address: journal.address}}" v-for="(journal, index) in desSciJournals" :key="index">
       {{ journal.name }}
     </router-link>
   </div>
 </template>
   
 <script lang="ts" setup>
-import { ref } from 'vue';
 import prePrints from '@/contracts/preprint/contract-address.json';
 import desSciJournals from '@/contracts/desci/contract-address.json';
 </script>
