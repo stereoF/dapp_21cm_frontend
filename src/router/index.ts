@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/components/HomeView.vue'
+import HomeView from '@/pages/HomeView.vue'
 // import UploadPageVue from '@/pages/upload/UploadPage.vue'
 
 const router = createRouter({
@@ -67,7 +67,7 @@ const router = createRouter({
           props: true
         },
         {
-          path: 'editor/assignReviewers/:address/:paperId',
+          path: 'editor/assignReviewers/:address/:paperCID',
           name: 'desci-assign-reviewer-paper',
           component: () => import('@/pages/deSci/EditorPages/AssignReviewers.vue'),
           props: true

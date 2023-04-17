@@ -3,10 +3,10 @@
         <!-- Title -->
         <h2>Journal name: {{ journalName }}</h2>
         <!-- <h5>Paper Title: {{ paperInfo.keyInfo }}</h5>
-      <h5>Paper CID: {{ paperId }}</h5> -->
+      <h5>Paper CID: {{ paperCID }}</h5> -->
         <div>
             <Suspense>
-                <PaperInfo :address="$props.address" :paperCID="$props.paperId" />
+                <PaperInfo :address="$props.address" :paperCID="$props.paperCID" />
                 <template #fallback>
                     <a-space size="large">
                         <a-spin :size="32" />
@@ -32,7 +32,7 @@
                             </a-col>
                         </div>
                         <Suspense>
-                            <SubmitCommentCID :address="$props.address" :paperCID="$props.paperId" disable-revise/>
+                            <SubmitCommentCID :address="$props.address" :paperCID="$props.paperCID" disable-revise/>
                             <template #fallback>
                                 <a-space size="large">
                                     <a-spin :size="32" />
@@ -67,7 +67,7 @@ export default defineComponent({
             type: String,
             required: true
         },
-        paperId: {
+        paperCID: {
             type: String,
             required: true
         },
@@ -76,13 +76,13 @@ export default defineComponent({
         const router = useRouter();
         const { provider, signer } = await useProvider();
         const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
-        const paperId = ref(props.paperId)
+        const paperCID = ref(props.paperCID)
         const editors = reactive(await deSciPrint.editors());
 
         const journalName = ref(await deSciPrint.name());
-        const reviewers = reactive(await deSciPrint.getReviewers(paperId.value));
+        const reviewers = reactive(await deSciPrint.getReviewers(paperCID.value));
 
-        let process = reactive(await deSciPrint.deSciProcess(props.paperId));
+        let process = reactive(await deSciPrint.deSciProcess(props.paperCID));
 
         const yourAddress = ref(await signer.getAddress());
         const isEditor = ref(editors.includes(yourAddress.value));
@@ -104,11 +104,11 @@ export default defineComponent({
                 }
 
                 if (submitList.length > 0) {
-                    await deSciPrint.connect(signer).reviewerAssign(paperId.value, submitList);
+                    await deSciPrint.connect(signer).reviewerAssign(paperCID.value, submitList);
                 };
 
                 if (removeList.length > 0) {
-                    await deSciPrint.connect(signer).removeReviewer(paperId.value, removeList);
+                    await deSciPrint.connect(signer).removeReviewer(paperCID.value, removeList);
                 };
 
                 router.push({

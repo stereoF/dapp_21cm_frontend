@@ -2,29 +2,31 @@
     <Suspense>
         <PaperInfo :address="address" :paperCID="paperCID" />
     </Suspense>
-    <router-link v-if="journalEditors.includes(yourAddress)"
-        :to="{ name: 'desci-assign-reviewer-paper', params: { address: props.address, paperId: props.paperCID } }">
-        Process this paper as an editor
-    </router-link>
-    <router-link v-if="reviewers.includes(yourAddress)"
-        :to="{ name: 'desci-review-paper', params: { address: props.address, paperCID: props.paperCID } }">
-        Process this paper as a reviewer
-    </router-link>
-    <div v-if="web3Info[1].value === yourAddress">
-        <a-space direction="vertical">
-            <a-row>
-                <router-link
-                    :to="{ name: 'desci-reply-comment', params: { address: props.address, paperCID: props.paperCID } }">
-                    Reply the reviewers' comments as the author
-                </router-link>
-            </a-row>
-            <a-row>
-                <router-link :to="{ name: 'desci-replynew', params: { address: props.address, prevCID: props.paperCID } }">
-                    Submit the revised paper
-                </router-link>
-            </a-row>
-        </a-space>
-    </div>
+    <a-list>
+        <a-list-item v-if="journalEditors.includes(yourAddress)">
+            <router-link
+                :to="{ name: 'desci-assign-reviewer-paper', params: { address: props.address, paperCID: props.paperCID } }">
+                Process this paper as an editor
+            </router-link>
+        </a-list-item>
+        <a-list-item v-if="reviewers.includes(yourAddress)">
+            <router-link
+                :to="{ name: 'desci-review-paper', params: { address: props.address, paperCID: props.paperCID } }">
+                Process this paper as a reviewer
+            </router-link>
+        </a-list-item>
+        <a-list-item v-if="web3Info[1].value === yourAddress">
+            <router-link
+                :to="{ name: 'desci-reply-comment', params: { address: props.address, paperCID: props.paperCID } }">
+                Reply the reviewers' comments as the author
+            </router-link>
+        </a-list-item>
+        <a-list-item v-if="web3Info[1].value === yourAddress">
+            <router-link :to="{ name: 'desci-replynew', params: { address: props.address, prevCID: props.paperCID } }">
+                Submit the revised paper
+            </router-link>
+        </a-list-item>
+    </a-list>
 </template>
 
 <script lang="ts" setup>

@@ -1,15 +1,19 @@
 <template>
   <div class="menu">
-    <img class="logo" src="../assets/logo.png" alt="logo">
     <div class="menu-demo">
-    <a-menu mode="horizontal" :default-selected-keys="['1']">
-      <a-menu-item key="1">
-        <router-link to="/">Home</router-link>
-      </a-menu-item>
-      <a-menu-item key="2">Journal Home</a-menu-item>
-      <a-menu-item key="3">My Papers</a-menu-item>
-    </a-menu>
-  </div>
+      <a-menu mode="horizontal" :default-selected-keys="['1']">
+        <a-menu-item key="0" :style="{ padding: 0, marginRight: '38px' }" disabled>
+          <div>
+            <img class="logo" src="../assets/logo.png" alt="logo">
+          </div>
+        </a-menu-item>
+        <a-menu-item key="1">
+          <router-link to="/">Home</router-link>
+        </a-menu-item>
+        <a-menu-item key="2">Journal Home</a-menu-item>
+        <a-menu-item key="3">My Papers</a-menu-item>
+      </a-menu>
+    </div>
     <div>
       <WalletConnector />
     </div>
@@ -49,7 +53,8 @@ import WalletConnector from './WalletConnector.vue'
 } */
 
 .menu-demo {
-  width: 20%;
-  background-color: var(--color-neutral-2); 
+  width: 30%;
+  background-color: var(--color-neutral-2);
+  align-items: center;
 }
 </style>

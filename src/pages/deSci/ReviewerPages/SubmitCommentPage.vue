@@ -68,12 +68,12 @@ const props = defineProps(
 // const provider = new ethers.providers.Web3Provider(window.ethereum);
 const { provider, signer } = await useProvider();
 const deSciPrint = new ethers.Contract(props.address, DeSciPrint.abi, provider);
-const paperId = ref(props.paperCID)
+const paperCID = ref(props.paperCID)
 
 const yourAddress = ref(signer.getAddress());
-const isReviewer = ref(await deSciPrint._isReviewer(paperId.value, yourAddress.value));
+const isReviewer = ref(await deSciPrint._isReviewer(paperCID.value, yourAddress.value));
 
-const reviewInfo = ref(await deSciPrint.deSciReviews(paperId.value, yourAddress.value));
+const reviewInfo = ref(await deSciPrint.deSciReviews(paperCID.value, yourAddress.value));
 const reviewStatus = ref(reviewInfo.value.reviewerStatus);
 
 

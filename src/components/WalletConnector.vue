@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="!getWalletConnected" class="connect-btn" @click="connectWallet">
-          Connect Wallet
+          Connect Polygon
         </div>
         <div v-if="getWalletConnected" class="balance">
           Balance: {{balance}} ETH
@@ -20,13 +20,15 @@ const { balance, getWalletConnected } = storeToRefs(store);
 
 
 async function connectWallet() {
-  const { provider, signer } = await useProvider();
+  const { provider, signer, switchNetwork } = await useProvider();
   // const signer = provider.getSigner();
+  switchNetwork();
   const address = await signer.getAddress();
   const balanceWei = await provider.getBalance(address);
   
   store.setBalance(parseFloat(ethers.utils.formatEther(balanceWei)));
   store.setAddress(address);
+
 }
 
 </script>
