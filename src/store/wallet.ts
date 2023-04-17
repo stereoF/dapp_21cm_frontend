@@ -4,7 +4,8 @@ export const useWalletStore = defineStore({
     id: 'wallet',
     state: () => ({
         address: '',
-        balance: 0
+        balance: 0,
+        // chainId: '0x',
     }),
     actions: {
         setAddress(address: string) {
@@ -12,11 +13,17 @@ export const useWalletStore = defineStore({
         },
         setBalance(balance: number) {
             this.balance = balance
-        }
+        },
+        // setChainId(chainId: string) {
+        //     this.chainId = chainId
+        // }
     },
     getters: {
         getWalletConnected: (state) => {
             return state.address !== ''
-        }
+        },
+        // getConnectionStatus: (state) => {
+        //     return state.chainId === '0x13881' ? true : false
+        // } 
     }
 })

@@ -1,49 +1,47 @@
 <template>
-    <div>
-        <div v-if="!getWalletConnected" class="connect-btn" @click="connectWallet">
-          Connect Polygon
-        </div>
-        <div v-if="getWalletConnected" class="balance">
-          Balance: {{balance}} ETH
-        </div>
+  <div>
+    <div v-if="!connected" class="connect-btn" @click="connectWallet">
+      Connect Polygon
     </div>
+    <div v-else>
+      Polygon Connected
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ethers } from 'ethers';
-import { storeToRefs } from 'pinia';
-import { useWalletStore } from '../store/wallet';
 import { useProvider } from '@/scripts/ethProvider'
+import { ref } from 'vue';
 
-const store = useWalletStore();
-const { balance, getWalletConnected } = storeToRefs(store);
+const connected = ref(false);
+if (window.ethereum.chainId == '0x13881') {
+  connected.value = true;
+}
 
+const { switchNetwork } = await useProvider();
 
 async function connectWallet() {
-  const { provider, signer, switchNetwork } = await useProvider();
-  // const signer = provider.getSigner();
-  switchNetwork();
-  const address = await signer.getAddress();
-  const balanceWei = await provider.getBalance(address);
-  
-  store.setBalance(parseFloat(ethers.utils.formatEther(balanceWei)));
-  store.setAddress(address);
-
+  await switchNetwork();
+  setTimeout(() => {
+    if (window.ethereum.chainId == '0x13881') {
+      connected.value = true;
+    }
+  }, 1000);
 }
+
 
 </script>
 
 <style scoped>
 .connect-btn {
-    background-color: #00aaff;
-    color: #ffffff;
-    padding: 8px 16px;
-    border-radius: 16px;
-    cursor: pointer;
-  }
-  
-.balance {
-  font-size: 16px;
+  background-color: #00aaff;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 16px;
+  cursor: pointer;
 }
 
+/* .balance {
+  font-size: 16px;
+} */
 </style>

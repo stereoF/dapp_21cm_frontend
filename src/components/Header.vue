@@ -15,7 +15,9 @@
       </a-menu>
     </div>
     <div>
-      <WalletConnector />
+      <Suspense>
+        <WalletConnector />
+      </Suspense>
     </div>
   </div>
 </template>
@@ -53,7 +55,7 @@ import WalletConnector from './WalletConnector.vue'
 } */
 
 .menu-demo {
-  width: 30%;
+  width: 80%;
   background-color: var(--color-neutral-2);
   align-items: center;
 }

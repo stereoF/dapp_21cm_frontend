@@ -82,7 +82,7 @@ const switchNetwork = async () => {
   } else {
     // If window.ethereum is not found then MetaMask is not installed
     alert('MetaMask is not installed. Please install it to use this app: https://metamask.io/download.html');
-  } 
+  }
 }
 
 export async function useProvider() {
