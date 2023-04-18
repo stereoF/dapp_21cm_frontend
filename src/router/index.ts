@@ -54,6 +54,12 @@ const router = createRouter({
               component: () => import('@/pages/deSci/PublishedPaperList.vue'),
               props: true
             },
+            {
+              path: 'author',
+              name: 'desci-journal-author',
+              component: () => import('@/pages/deSci/AuthorPages/AuthorHomePage.vue'),
+              props: true
+            },
           ]
         },
         {

@@ -1,13 +1,24 @@
 <template>
-    <a-list>
+    <a-list :style="{ width: `600px` }" :virtualListProps="{
+        height: 600,
+    }" :data="paperListInfoShow">
         <template #header>
             Published Papers
         </template>
-        <a-list-item v-for="paper in paperListInfoShow">
+
+        <template #item="{ item, index }">
+            <a-list-item :key="index">
+                <router-link
+                    :to="{ name: 'desci-paper-info', params: { address: props.address, paperCID: item.paperCID } }">
+                    {{ item.title }}
+                </router-link>
+            </a-list-item>
+        </template>
+        <!-- <a-list-item v-for="paper in paperListInfoShow">
             <router-link :to="{ name: 'desci-paper-info', params: { address: props.address, paperCID: paper.paperCID } }">
                 {{ paper.title }}
             </router-link>
-        </a-list-item>
+        </a-list-item> -->
     </a-list>
 </template>
 

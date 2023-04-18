@@ -32,7 +32,7 @@ const store = useAddress();
 const { address } = storeToRefs(store);
 // let address = ref(route.params.address);
 
-let journalHomeLink = reactive(address.value=='' ?  {name: 'home'} : {name: 'desci-journal-home', params: {address: address.value}})
+let journalHomeLink = reactive(address.value=='' ?  {name: 'home'} : {name: 'desci-journal-published', params: {address: address.value}})
 
 watch(
   () => route.params, (current, previous) => {

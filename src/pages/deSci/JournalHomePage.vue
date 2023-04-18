@@ -9,8 +9,18 @@
             <a-layout-sider style="width: 300px">
                 <div class="menu-demo">
                     <a-menu>
-                        <a-menu-item>Published</a-menu-item>
-                        <a-menu-item>Author's Page</a-menu-item>
+                        <a-menu-item>
+                            <router-link
+                                :to="{ name: 'desci-journal-published', params: { address: props.address } }">
+                                Published
+                            </router-link>
+                        </a-menu-item>
+                        <a-menu-item>
+                            <router-link
+                                :to="{ name: 'desci-journal-author', params: { address: props.address } }">
+                                Author's Page
+                            </router-link>
+                        </a-menu-item>
                         <a-menu-item>Reviewer's Page</a-menu-item>
                         <a-menu-item>Editor's Page</a-menu-item>
                     </a-menu>
@@ -20,14 +30,6 @@
                 <Suspense>
                     <router-view></router-view>
                 </Suspense>
-                <!-- <a-list>
-                    <a-list-item v-for="paper in paperListInfoShow">
-                        <router-link
-                            :to="{ name: 'desci-paper-info', params: { address: props.address, paperCID: paper.paperCID } }">
-                            {{ paper.title }}
-                        </router-link>
-                    </a-list-item>
-                </a-list> -->
             </a-layout-content>
         </a-layout>
     </a-layout>
@@ -54,15 +56,6 @@ const contract = new ethers.Contract(
 );
 
 let journalName = await contract.name();
-
-// let printCnt = await contract.deSciPrintCnt();
-
-// let paperPublished: any = [];
-// if (printCnt > 0) {
-//     paperPublished = await contract.printsPool(7, 0, printCnt - 1);
-// }
-
-// const { paperListInfoShow } = await usePaperListInfo(props.address, paperPublished);
 
 </script>
 

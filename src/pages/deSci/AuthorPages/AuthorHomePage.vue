@@ -1,11 +1,20 @@
 <template>
-    <a-list>
-        <a-list-item v-for="paper in paperListInfoShow">
-            <router-link :to="{ name: 'desci-paper-info', params: { address: props.address, paperCID: paper.paperCID } }">
-                {{ paper.title }}
-            </router-link>
-        </a-list-item>
-    </a-list>
+    <a-collapse v-for="(result, index) in results" :default-active-key="[0]">
+        <a-collapse-item :header="result.statu" :key="index">
+            <a-list :style="{ width: `600px` }" :virtualListProps="{
+                height: 600,
+            }" :data="result.paperListInfoShow">
+                <template #item="{ item, index }">
+                    <a-list-item :key="index">
+                        <router-link
+                            :to="{ name: 'desci-paper-info', params: { address: props.address, paperCID: item.paperCID } }">
+                            {{ item.title }}
+                        </router-link>
+                    </a-list-item>
+                </template>
+            </a-list>
+        </a-collapse-item>
+    </a-collapse>
 </template>
 
 <script lang="ts" setup>
@@ -13,6 +22,7 @@ import { ethers } from 'ethers';
 import contractABI from "@/contracts/desci/DeSciPrint.json";
 import { useProvider } from '@/scripts/ethProvider';
 import { usePaperListInfo } from '@/scripts/paperInfo';
+import { useStatus } from '@/scripts/status';
 
 const props = defineProps({
     address: {
@@ -21,21 +31,32 @@ const props = defineProps({
     },
 })
 
-const { provider } = await useProvider();
+const { ProcessStatus } = useStatus();
+
+const { provider, signer } = await useProvider();
 const contract = new ethers.Contract(
     props.address,
     contractABI.abi,
     provider
 );
 
+const yourAddress = await signer.getAddress();
 
 let printCnt = await contract.deSciPrintCnt();
+let statuIndexList = [5, 1, 0, 4, 7, 2, 3];
+let results: any = [];
 
-let paperPublished: any = [];
 if (printCnt > 0) {
-    paperPublished = await contract.printsPool(7, 0, printCnt - 1);
+    for (let i = 0; i < statuIndexList.length; i++) {
+        let statuIndex = statuIndexList[i];
+        let statu = ProcessStatus[statuIndex];
+        let paperList = await contract.getAuthorPapers(yourAddress, statuIndex, 0, printCnt - 1);
+        let { paperListInfoShow } = await usePaperListInfo(props.address, paperList)
+        results.push({
+            statu: statu,
+            paperListInfoShow: paperListInfoShow
+        })
+    }
 }
-
-const { paperListInfoShow } = await usePaperListInfo(props.address, paperPublished);
 
 </script>
