@@ -64,7 +64,7 @@ if (printCnt > 0) {
     for (let i = 0; i < statuIndexList.length; i++) {
         let statuIndex = statuIndexList[i];
         let statu = ProcessStatus[statuIndex];
-        let paperList = await contract.getAuthorPapers(yourAddress, statuIndex, 0, printCnt - 1);
+        let paperList = await contract.getReviewerPapers(yourAddress, statuIndex, 0, printCnt - 1);
         let { paperListInfoShow } = await usePaperListInfo(props.address, paperList)
         results.push({
             statu: statu,
@@ -73,7 +73,7 @@ if (printCnt > 0) {
     }
 }
 
-let paperReviewList = await contract.getAuthorPapers(yourAddress, 1, 0, printCnt - 1);
+let paperReviewList = await contract.getReviewerPapers(yourAddress, 1, 0, printCnt - 1);
 let paperWaitingList = paperReviewList.filter(async (paperCID: string) => {
     let paperReviewInfo = await contract.deSciReviews(paperCID, yourAddress);
     return paperReviewInfo == 0;

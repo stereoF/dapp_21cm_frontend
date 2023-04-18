@@ -1,6 +1,6 @@
 <template>
-    <a-collapse v-for="(result, index) in results" :default-active-key="[0]">
-        <a-collapse-item :header="result.statu" :key="index">
+    <a-collapse :default-active-key="[0]">
+        <a-collapse-item v-for="(result, index) in results" :header="result.statu" :key="index">
             <a-list :style="{ width: `600px` }" :virtualListProps="{
                 height: 600,
             }" :data="result.paperListInfoShow">
