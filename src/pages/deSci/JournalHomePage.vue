@@ -15,6 +15,11 @@
                             </router-link>
                         </a-menu-item>
                         <a-menu-item>
+                            <router-link :to="{ name: 'desci-submit', params: { address: props.address } }">
+                                Submit Your Paper
+                            </router-link>
+                        </a-menu-item>
+                        <a-menu-item>
                             <router-link :to="{ name: 'desci-journal-author', params: { address: props.address } }">
                                 Author's Page
                             </router-link>
