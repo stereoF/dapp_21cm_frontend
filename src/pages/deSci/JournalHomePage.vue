@@ -21,7 +21,12 @@
                                 Author's Page
                             </router-link>
                         </a-menu-item>
-                        <a-menu-item>Reviewer's Page</a-menu-item>
+                        <a-menu-item>
+                            <router-link
+                                :to="{ name: 'desci-journal-reviewer', params: { address: props.address } }">
+                                Reviewer's Page
+                            </router-link>
+                        </a-menu-item>
                         <a-menu-item>Editor's Page</a-menu-item>
                     </a-menu>
                 </div>

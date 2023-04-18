@@ -60,6 +60,18 @@ const router = createRouter({
               component: () => import('@/pages/deSci/AuthorPages/AuthorHomePage.vue'),
               props: true
             },
+            // {
+            //   path: 'editor',
+            //   name: 'desci-journal-editor',
+            //   component: () => import('@/pages/deSci/EditorPages/EditorHomePage.vue'),
+            //   props: true
+            // },
+            {
+              path: 'reviewer',
+              name: 'desci-journal-reviewer',
+              component: () => import('@/pages/deSci/ReviewerPages/ReviewerHomePage.vue'),
+              props: true
+            },
           ]
         },
         {
