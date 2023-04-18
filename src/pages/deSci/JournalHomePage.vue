@@ -27,7 +27,12 @@
                                 Reviewer's Page
                             </router-link>
                         </a-menu-item>
-                        <a-menu-item>Editor's Page</a-menu-item>
+                        <a-menu-item>
+                            <router-link
+                                :to="{ name: 'desci-journal-editor', params: { address: props.address } }">
+                                Editor's Page
+                            </router-link>
+                        </a-menu-item>
                     </a-menu>
                 </div>
             </a-layout-sider>
@@ -44,7 +49,6 @@
 import { ethers } from 'ethers';
 import contractABI from "@/contracts/desci/DeSciPrint.json";
 import { useProvider } from '@/scripts/ethProvider';
-import { usePaperListInfo } from '@/scripts/paperInfo';
 
 const props = defineProps({
     address: {
