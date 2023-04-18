@@ -35,6 +35,11 @@
                             </router-link>
                         </a-menu-item>
                         <a-menu-item>
+                            <router-link :to="{ name: 'desci-assign-editor-journal', params: { address: props.address } }">
+                                Admin Page
+                            </router-link>
+                        </a-menu-item>
+                        <a-menu-item>
                             <router-link :to="{ name: 'desci-journal-withdraw', params: { address: props.address } }">
                                 Withdrawal Page
                             </router-link>
