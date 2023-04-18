@@ -10,27 +10,28 @@
                 <div class="menu-demo">
                     <a-menu>
                         <a-menu-item>
-                            <router-link
-                                :to="{ name: 'desci-journal-published', params: { address: props.address } }">
+                            <router-link :to="{ name: 'desci-journal-published', params: { address: props.address } }">
                                 Published
                             </router-link>
                         </a-menu-item>
                         <a-menu-item>
-                            <router-link
-                                :to="{ name: 'desci-journal-author', params: { address: props.address } }">
+                            <router-link :to="{ name: 'desci-journal-author', params: { address: props.address } }">
                                 Author's Page
                             </router-link>
                         </a-menu-item>
                         <a-menu-item>
-                            <router-link
-                                :to="{ name: 'desci-journal-reviewer', params: { address: props.address } }">
+                            <router-link :to="{ name: 'desci-journal-reviewer', params: { address: props.address } }">
                                 Reviewer's Page
                             </router-link>
                         </a-menu-item>
                         <a-menu-item>
-                            <router-link
-                                :to="{ name: 'desci-journal-editor', params: { address: props.address } }">
+                            <router-link :to="{ name: 'desci-journal-editor', params: { address: props.address } }">
                                 Editor's Page
+                            </router-link>
+                        </a-menu-item>
+                        <a-menu-item>
+                            <router-link :to="{ name: 'desci-journal-withdraw', params: { address: props.address } }">
+                                Withdrawal Page
                             </router-link>
                         </a-menu-item>
                     </a-menu>

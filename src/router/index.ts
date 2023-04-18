@@ -72,6 +72,12 @@ const router = createRouter({
               component: () => import('@/pages/deSci/ReviewerPages/ReviewerHomePage.vue'),
               props: true
             },
+            {
+              path: 'withdraw',
+              name: 'desci-journal-withdraw',
+              component: () => import('@/pages/deSci/WithdrawalPage.vue'),
+              props: true
+            }
           ]
         },
         {
