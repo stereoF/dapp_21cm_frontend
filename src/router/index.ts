@@ -46,7 +46,15 @@ const router = createRouter({
           path: ':address',
           name: 'desci-journal-home',
           component: () => import('@/pages/deSci/JournalHomePage.vue'),
-          props: true
+          props: true,
+          children: [
+            {
+              path: 'published',
+              name: 'desci-journal-published',
+              component: () => import('@/pages/deSci/PublishedPaperList.vue'),
+              props: true
+            },
+          ]
         },
         {
           path: 'replycomment/:address/:paperCID',
