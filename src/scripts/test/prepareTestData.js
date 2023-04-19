@@ -89,25 +89,25 @@ async function prepare(startIndex, endIndex) {
         await submit(paperCID);
     };
 
-    setTimeout(async () => {
-        for (let i = startIndex; i < endIndex; i++) {
-            paperCID = 'paperCID_' + i;
-            await assignReviewers(paperCID);
-        }
-    }, 10000);
+    // setTimeout(async () => {
+    //     for (let i = startIndex; i < endIndex; i++) {
+    //         paperCID = 'paperCID_' + i;
+    //         await assignReviewers(paperCID);
+    //     }
+    // }, 10000);
 
-    setTimeout(async () => {
-        for (let i = startIndex; i < endIndex; i++) {
-            paperCID = 'paperCID_' + i;
-            await reviewPrint(paperCID, reviewer1Signer, 'reviewer1', 3);
-            await reviewPrint(paperCID, reviewer2Signer, 'reviewer2', 3);
-        }
-    }, 20000);
+    // setTimeout(async () => {
+    //     for (let i = startIndex; i < endIndex; i++) {
+    //         paperCID = 'paperCID_' + i;
+    //         await reviewPrint(paperCID, reviewer1Signer, 'reviewer1', 3);
+    //         await reviewPrint(paperCID, reviewer2Signer, 'reviewer2', 3);
+    //     }
+    // }, 20000);
 
 }
 
 
-prepare(111, 120);
+prepare(145, 147);
 
 
 

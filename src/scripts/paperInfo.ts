@@ -89,10 +89,10 @@ export async function usePaperInfo(address: string, paperCID: string) {
     let status = ProcessStatus[processIndex];
 
     const basicInfo = [
-        {
-            label: 'Title',
-            value: printInfo.keyInfo,
-        },
+        // {
+        //     label: 'Title',
+        //     value: printInfo.keyInfo,
+        // },
         {
             label: 'Status',
             value: status
@@ -123,6 +123,8 @@ export async function usePaperInfo(address: string, paperCID: string) {
         },
     ]
 
+    let title = printInfo.keyInfo;
+
     let paperEditor = process.editor === ethers.constants.AddressZero ? '' : process.editor;
 
     const web3Info = [
@@ -147,7 +149,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
     let prevCID = printInfo.prevCID;
     let nextCID = printInfo.nextCID;
 
-    return { basicInfo, web3Info, reviewResultShow, prevCID, nextCID, journalEditors, reviewers }
+    return { basicInfo, web3Info, reviewResultShow, prevCID, nextCID, journalEditors, reviewers, title }
 
 };
 

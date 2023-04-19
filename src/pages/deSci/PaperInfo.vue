@@ -1,11 +1,29 @@
 <template>
-  <br/>
+  <br />
   <a-space direction="vertical" size="large" fill>
-    <a-descriptions :data="basicInfo" title="Basic Info" />
+    <a-typography>
+      <a-typography-title :heading="4">Title</a-typography-title>
+      <a-typography-paragraph>{{ title }}</a-typography-paragraph>
+      <a-typography-title :heading="4">Abstract</a-typography-title>
+      <a-typography-paragraph>{{ abstractData }}</a-typography-paragraph>
+      <a-typography-title :heading="4">Fields</a-typography-title>
+      <a-typography-paragraph>{{ fieldList.join(',') }}</a-typography-paragraph>
+    </a-typography>
+    <a-list>
+      <template #header>
+        Information of Authors
+      </template>
+      <a-list-item v-for="author in authorsData">
+        <a-descriptions :data="author" />
+      </a-list-item>
+    </a-list>
     <a-link :href="VITE_IPFS_GATEWAY + props.paperCID" target="_blank">
       <a-button type="primary">View Paper</a-button>
     </a-link>
-    <a-collapse>
+    <a-collapse :default-active-key="['3']">
+      <a-collapse-item header="Basic Information of peer review result" key="3">
+        <a-descriptions :data="basicInfo" title="Review Result" />
+      </a-collapse-item>
       <a-collapse-item header="Information about review comments and replies" key="2">
         <div v-for="result in reviewResultShow">
           <a-descriptions :data="result.obj" :title="result.name" />
@@ -38,6 +56,7 @@
 import { usePaperInfo } from '@/scripts/paperInfo';
 import { useRouter, useRoute } from 'vue-router';
 import { watch } from 'vue';
+import { usePaperMeta } from '@/scripts/paperMetaDB';
 
 const router = useRouter();
 let route = useRoute();
@@ -57,7 +76,9 @@ const props = defineProps(
   }
 );
 
-const { web3Info, basicInfo, reviewResultShow, prevCID, nextCID } = await usePaperInfo(props.address, props.paperCID);
+const { web3Info, basicInfo, reviewResultShow, prevCID, nextCID, title } = await usePaperInfo(props.address, props.paperCID);
+
+let { authorsData, fieldList, abstractData } = await usePaperMeta(props.address, props.paperCID);
 
 const toPrev = () => {
   // console.log(prevCID)
