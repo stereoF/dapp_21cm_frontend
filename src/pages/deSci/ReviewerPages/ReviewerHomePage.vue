@@ -81,6 +81,7 @@ const yourAddress = await signer.getAddress();
 let printCnt = await contract.deSciPrintCnt();
 let statuIndexList = [1, 3, 4, 5, 7];
 let results: any = [];
+let paperWaitingShow: any = [];
 
 if (printCnt > 0) {
     for (let i = 0; i < statuIndexList.length; i++) {
@@ -93,14 +94,14 @@ if (printCnt > 0) {
             paperListInfoShow: paperListInfoShow
         })
     }
+    let paperReviewList = await contract.getReviewerPapers(yourAddress, 1, 0, printCnt - 1);
+    let paperWaitingList = paperReviewList.filter(async (paperCID: string) => {
+        let paperReviewInfo = await contract.deSciReviews(paperCID, yourAddress);
+        return paperReviewInfo == 0;
+    });
+    let { paperListInfoShow } = await usePaperListInfo(props.address, paperWaitingList);
+    paperWaitingShow = paperListInfoShow;
 }
 
-let paperReviewList = await contract.getReviewerPapers(yourAddress, 1, 0, printCnt - 1);
-let paperWaitingList = paperReviewList.filter(async (paperCID: string) => {
-    let paperReviewInfo = await contract.deSciReviews(paperCID, yourAddress);
-    return paperReviewInfo == 0;
-});
-let { paperListInfoShow } = await usePaperListInfo(props.address, paperWaitingList);
-let paperWaitingShow = paperListInfoShow;
 
 </script>

@@ -2,7 +2,10 @@
   <div class="container">
     <br/>
     <h4>Pre-Print Journals</h4>
-    <router-link to="/" v-for="(journal, index) in prePrints" :key="index">
+    <!-- <router-link to="/" v-for="(journal, index) in prePrints" :key="index">
+      {{ journal.name }}
+    </router-link> -->
+    <router-link :to="{ name: 'preprint-journal-published', params: { address: journal.address}}" v-for="(journal, index) in prePrints" :key="index">
       {{ journal.name }}
     </router-link>
     <br/>

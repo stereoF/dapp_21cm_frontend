@@ -88,6 +88,7 @@ const isEditor = editors.includes(yourAddress);
 let printCnt = await contract.deSciPrintCnt();
 let statuIndexList = [4, 1, 2, 3, 5, 7];
 let results: any = [];
+let paperPendingShow: any = [];
 
 if (printCnt > 0) {
     for (let i = 0; i < statuIndexList.length; i++) {
@@ -100,10 +101,11 @@ if (printCnt > 0) {
             paperListInfoShow: paperListInfoShow
         })
     }
+
+    let paperPendingList = await contract.printsPool(0, 0, printCnt - 1);
+    let { paperListInfoShow } = await usePaperListInfo(props.address, paperPendingList);
+    paperPendingShow = paperListInfoShow;
 }
 
-let paperPendingList = await contract.printsPool(0, 0, printCnt - 1);
-let { paperListInfoShow } = await usePaperListInfo(props.address, paperPendingList);
-let paperPendingShow = paperListInfoShow;
 
 </script>

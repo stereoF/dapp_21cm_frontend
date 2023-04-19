@@ -16,6 +16,26 @@ const router = createRouter({
       component: () => import('@/pages/results/SuccessSubmit.vue')
     },
     {
+      path: '/preprint/:address',
+      name: 'preprint-journal-home',
+      component: () => import('@/pages/prePrint/JournalHomePage.vue'),
+      props: true,
+      children: [
+        {
+          path: 'published',
+          name: 'preprint-journal-published',
+          component: () => import('@/pages/prePrint/RecentPublished.vue'),
+          props: true
+        },
+        {
+          path: 'author',
+          name: 'preprint-journal-author',
+          component: () => import('@/pages/prePrint/AuthorHomePage.vue'),
+          props: true
+        },
+      ]
+    },
+    {
       path: '/preprint',
       // name: 'desci-assign',
       component: () => import('@/components/SuspenseWraper.vue'),
@@ -30,10 +50,10 @@ const router = createRouter({
           props: true
         },
         {
-          path: 'recentPublished/:address',
-          name: 'recent-published',
-          component: () => import('@/pages/prePrint/RecentPublished.vue'),
-          props: true
+          path: 'paperinfo/:address/:paperCID',
+          name: 'preprint-paper-info',
+          component: () => import('@/pages/prePrint/PaperInfoPage.vue'),
+          props: true,
         },
       ]
     },

@@ -3,7 +3,7 @@
         height: 600,
     }" :data="paperListInfoShow">
         <template #header>
-          Recent Published in PrePrint
+            Recent Published in PrePrint
         </template>
 
         <template #item="{ item, index }">
@@ -25,46 +25,46 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
-import { ethers } from "ethers";
-import PrePrintTrack from "@/contracts/preprint/PrePrintTrack.json";
+import { ethers } from 'ethers';
+import contractABI from "@/contracts/preprint/PrePrintTrack.json";
 import { useProvider } from '@/scripts/ethProvider';
+import { ref, reactive } from 'vue';
 import { usePaperMeta } from '@/scripts/paperMetaDB';
-// import { useDescription } from '@/scripts/paperDescription';
 
 const props = defineProps({
-  address: {
-    type: String,
-    required: true
-  }
-});
+    address: {
+        type: String,
+        required: true,
+    },
+})
 
-const { provider } = await useProvider();
-const prePrint = new ethers.Contract(
-  props.address,
-  PrePrintTrack.abi,
-  provider
+const { provider, signer } = await useProvider();
+const contract = new ethers.Contract(
+    props.address,
+    contractABI.abi,
+    provider
 );
 
-let printCnt = await prePrint.prePrintCnt();
-let showCnt = ref(1000);
-let startIndex = ref(printCnt - showCnt.value);
+const yourAddress = await signer.getAddress();
 
+let printCnt = await contract.prePrintCnt();
 let paperListInfoShow = reactive([] as any[]);
 
 if (printCnt > 0) {
-  let papers = await prePrint.prePrintCIDs(startIndex.value >= 0 ? startIndex.value : 0, printCnt - 1 >= 0 ? printCnt - 1 : 0)
-  let paperItems = await papers.map(async (paper: string) => {
-    let printInfo = await prePrint.prePrints(paper);
-    let { fieldList, abstractData } = await usePaperMeta(props.address, paper);
-    return {
-      title: printInfo.keyInfo,
-      paperCID: paper,
-      fields: fieldList,
-      abstract: abstractData,
-    }
-  });
-  paperListInfoShow = reactive(await Promise.all(paperItems));
+
+    let papers = await contract.getAuthorPapers(yourAddress, 0, printCnt - 1);
+    let paperItems = await papers.map(async (paper: string) => {
+        let printInfo = await contract.prePrints(paper);
+        let { fieldList, abstractData } = await usePaperMeta(props.address, paper);
+        return {
+            title: printInfo.keyInfo,
+            paperCID: paper,
+            fields: fieldList,
+            abstract: abstractData,
+        }
+    });
+    paperListInfoShow = reactive(await Promise.all(paperItems));
+
 }
 
 </script>

@@ -2,6 +2,9 @@ const ethers = require('ethers');
 const deSciABI = require("../../contracts/desci/DeSciPrint.json");
 const deSciAddressFile = require("../../contracts/desci/contract-address.json");
 
+const prePrintABI = require("../../contracts/preprint/PrePrintTrack.json");
+const prePrintAddressFile = require("../../contracts/preprint/contract-address.json");
+
 
 console.log('prepare data for testing');
 
@@ -9,6 +12,9 @@ let paperCID = 'paperCID_6';
 
 const deSciAddress = deSciAddressFile[0].address;
 console.log('deSciAddress: ', deSciAddress);
+
+const prePrintAddress = prePrintAddressFile[0].address;
+console.log('prePrintAddress: ', prePrintAddress);
 
 const privateKeyowner = "93030c2db7ee1564b43693f99776a27112059dcd9c5cec8052f13444c991e0e7";
 const privateKeyAuthor = "ed8b76f4de88432ed45aa3ec420af4d48ea1f46a0175f345662f915b198b94d5";
@@ -33,6 +39,59 @@ const deSciContract = new ethers.Contract(
     deSciABI.abi,
     provider
 );
+
+const prePrintContract = new ethers.Contract(
+    prePrintAddress,
+    prePrintABI.abi,
+    provider
+);
+
+
+async function submitPrePrint(paperCID) {
+
+    let title = `Test Paper Title: ${paperCID}`;
+    console.log('title: ', title)
+
+    const description = {
+        authors: [
+            {
+                name: "test1",
+                email: "test1@test.com",
+                affiliation: "test1"
+            },
+            {
+                name: "test2",
+                email: "test2@test.com",
+                affiliation: "test2"
+            }
+        ],
+        fields: [
+            {
+                field: "test1"
+            },
+            {
+                field: "test2"
+            },
+            {
+                field: "test3"
+            }
+        ],
+        title: title,
+        abstract: "If approved, tofersen will become the latest example of the agency’s evolving approach to neurological drug development, " +
+            "which could boost industry investment in brain diseases. A vote of confidence for the drug would also supercharge interest in using NFL as a tool to " +
+            "measure brain health and to test drugs in future. “This could be the start of a new era,” says Valentina Bonetto, a neuroscientist at the Mario Negri " +
+            "Institute for Pharmacological Research in Milan, Italy.",
+    }
+
+    const paper = {
+        paperCID: paperCID,
+        keyInfo: title,
+        description: JSON.stringify(description),
+    };
+
+    await prePrintContract.connect(authorSigner).submit(paper.paperCID, paper.keyInfo, paper.description);
+    console.log('submit pre-print paper: ', paperCID);
+};
 
 async function assignEditors() {
     await deSciContract.connect(ownerSigner).pushEditors([editorSigner.address]);
@@ -72,9 +131,9 @@ async function submit(paperCID) {
         ],
         title: title,
         abstract: "If approved, tofersen will become the latest example of the agency’s evolving approach to neurological drug development, " +
-        "which could boost industry investment in brain diseases. A vote of confidence for the drug would also supercharge interest in using NFL as a tool to " +
-        "measure brain health and to test drugs in future. “This could be the start of a new era,” says Valentina Bonetto, a neuroscientist at the Mario Negri " +
-        "Institute for Pharmacological Research in Milan, Italy.",
+            "which could boost industry investment in brain diseases. A vote of confidence for the drug would also supercharge interest in using NFL as a tool to " +
+            "measure brain health and to test drugs in future. “This could be the start of a new era,” says Valentina Bonetto, a neuroscientist at the Mario Negri " +
+            "Institute for Pharmacological Research in Milan, Italy.",
     }
 
     const paper = {
@@ -104,11 +163,13 @@ async function reviewPrint(paperCID, reviewerSigner, comment, choice) {
 
 async function prepare(startIndex, endIndex) {
 
-    // assignEditors();
+
+    await assignEditors();
 
     for (let i = startIndex; i < endIndex; i++) {
         paperCID = 'paperCID_' + i;
         await submit(paperCID);
+        await submitPrePrint(paperCID);
     };
 
     setTimeout(async () => {
@@ -129,7 +190,7 @@ async function prepare(startIndex, endIndex) {
 }
 
 
-prepare(15, 20);
+prepare(1, 10);
 
 
 

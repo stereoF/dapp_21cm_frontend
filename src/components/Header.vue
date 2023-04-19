@@ -29,16 +29,23 @@ import { storeToRefs } from 'pinia';
 
 const route = useRoute();
 const store = useAddress();
-const { address } = storeToRefs(store);
-// let address = ref(route.params.address);
+const { getJournalHomeLink } = storeToRefs(store);
 
-let journalHomeLink = reactive(address.value=='' ?  {name: 'home'} : {name: 'desci-journal-published', params: {address: address.value}})
+let journalHomeLink = getJournalHomeLink;
+
 
 watch(
-  () => route.params, (current, previous) => {
-    if (typeof(current.address) === 'string') {
-      store.setAddress(current.address)
-    }
+  () => route, (current, previous) => {
+    if (typeof(current.params.address) === 'string') {
+      store.setAddress(current.params.address)
+    };
+
+    let pathEle = current.path.split('/');
+    if (pathEle.length > 0) {
+      let pathType = pathEle[1];
+      store.setPathType(pathType);
+    };
+
   },
   { deep: true }
 )
