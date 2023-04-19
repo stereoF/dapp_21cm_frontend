@@ -1,5 +1,4 @@
 import { useAxios } from '@/scripts/httpclient';
-import type { an } from 'vitest/dist/types-94cfe4b4';
 const { axiosInstance } = useAxios();
 
 export async function usePaperMeta(address: string, paperCID: string) {

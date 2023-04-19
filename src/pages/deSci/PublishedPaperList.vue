@@ -1,5 +1,5 @@
 <template>
-    <a-list :style="{ width: `600px` }" :virtualListProps="{
+    <a-list :style="{ width: `800px` }" :virtualListProps="{
         height: 600,
     }" :data="paperListInfoShow">
         <template #header>
@@ -8,17 +8,23 @@
 
         <template #item="{ item, index }">
             <a-list-item :key="index">
-                <router-link
+                <!-- <router-link
                     :to="{ name: 'desci-paper-info', params: { address: props.address, paperCID: item.paperCID } }">
                     {{ item.title }}
-                </router-link>
+                </router-link> -->
+                <div>
+                    <a-card :style="{ width: '600px' }" :title="item.title">
+                        <template #extra>
+                            <router-link
+                                :to="{ name: 'desci-paper-info', params: { address: props.address, paperCID: item.paperCID } }">
+                                more
+                            </router-link>
+                        </template>
+                        {{ item.abstract.substring(0, 300) }}{{ item.abstract.length > 300 ? '...' : '' }}
+                    </a-card>
+                </div>
             </a-list-item>
         </template>
-        <!-- <a-list-item v-for="paper in paperListInfoShow">
-            <router-link :to="{ name: 'desci-paper-info', params: { address: props.address, paperCID: paper.paperCID } }">
-                {{ paper.title }}
-            </router-link>
-        </a-list-item> -->
     </a-list>
 </template>
 

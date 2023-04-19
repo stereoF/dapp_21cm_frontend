@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { useProvider } from '@/scripts/ethProvider'
 import contractABI from "@/contracts/desci/DeSciPrint.json";
 import { useStatus } from '@/scripts/status';
-import exp from "constants";
+import { usePaperMeta } from '@/scripts/paperMetaDB';
 
 
 export async function usePaperInfo(address: string, paperCID: string) {
@@ -166,10 +166,13 @@ export async function usePaperListInfo(address: string, paperCIDs: string[]) {
 
     let paperListInfo = paperCIDs.map(async (paperCID: string, index: number) => {
         let printInfo = await contract.deSciPrints(paperCID);
+        let mataInfo = await usePaperMeta(address, paperCID);
 
         return {
             paperCID: paperCID,
             title: printInfo.keyInfo,
+            fields: mataInfo.fieldList,
+            abstract: mataInfo.abstractData,
         }
     })
 
