@@ -12,7 +12,7 @@
                     <PaperInfo :address="props.address" :paperCID="props.paperCID" ref="paperInfo" />
                     <a-divider />
                     <h3>Choose the reviewer comment you want to reply</h3>
-                    <a-tabs default-active-key="1">
+                    <a-tabs default-active-key="0">
                         <a-tab-pane v-for="(result, index) in reviewResultShow" :key="index" :title="result.name">
                             <a-split
                                 :style="{ height: '600px', width: '100%', minWidth: '500px', border: '1px solid var(--color-border)' }"
