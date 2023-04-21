@@ -11,10 +11,16 @@
 
 <script lang="ts" setup>
 import { useProvider } from '@/scripts/ethProvider'
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+
+const VITE_CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
+
+
+const route = useRoute();
 
 const connected = ref(false);
-if (window.ethereum.chainId == '0x13881') {
+if (window.ethereum.chainId === VITE_CHAIN_ID) {
   connected.value = true;
 }
 
@@ -22,12 +28,35 @@ const { switchNetwork } = await useProvider();
 
 async function connectWallet() {
   await switchNetwork();
-  setTimeout(() => {
-    if (window.ethereum.chainId == '0x13881') {
-      connected.value = true;
+  // setTimeout(() => {
+  //   if (window.ethereum.chainId === VITE_CHAIN_ID) {
+  //     connected.value = true;
+  //   }
+  // }, 1000);
+  let pollCount = 0;
+  const pollInterval = setInterval(() => {
+    pollCount++;
+    // Check the status of the asynchronous function here
+    if (pollCount >= 10 || window.ethereum.chainId === VITE_CHAIN_ID) {
+      clearInterval(pollInterval);
+      if (window.ethereum.chainId === VITE_CHAIN_ID) {
+        connected.value = true;
+      }
     }
   }, 1000);
 }
+
+
+watch(
+  () => route, (current, previous) => {
+    if (window.ethereum.chainId === VITE_CHAIN_ID) {
+      connected.value = true;
+    } else {
+      connected.value = false;
+    }
+  },
+  { deep: true }
+)
 
 
 </script>

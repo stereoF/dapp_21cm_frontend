@@ -43,6 +43,12 @@ import { ethers } from 'ethers';
 //   } 
 // }
 
+const VITE_CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
+const VITE_CHAIN_NAME = import.meta.env.VITE_CHAIN_NAME;
+const VITE_RPC_URL = import.meta.env.VITE_RPC_URL;
+const VITE_NATIVE_CURRENCY_NAME = import.meta.env.VITE_NATIVE_CURRENCY_NAME;
+const VITE_NATIVE_CURRENCY_SYMBOL = import.meta.env.VITE_NATIVE_CURRENCY_SYMBOL;
+const VITE_BLOCK_EXPLORER_URL = import.meta.env.VITE_BLOCK_EXPLORER_URL;
 
 const switchNetwork = async () => {
   if (window.ethereum) {
@@ -50,7 +56,7 @@ const switchNetwork = async () => {
       // Try to switch to the Mumbai testnet
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x13881' }], // Check networks.js for hexadecimal network ids
+        params: [{ chainId: VITE_CHAIN_ID }], // Check networks.js for hexadecimal network ids
       });
     } catch (error: any) {
       // This error code means that the chain we want has not been added to MetaMask
@@ -61,15 +67,15 @@ const switchNetwork = async () => {
             method: 'wallet_addEthereumChain',
             params: [
               {   
-                chainId: '0x13881',
-                chainName: 'Polygon Mumbai Testnet',
-                rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
+                chainId: VITE_CHAIN_ID,
+                chainName: VITE_CHAIN_NAME,
+                rpcUrls: [VITE_RPC_URL],
                 nativeCurrency: {
-                    name: "Mumbai Matic",
-                    symbol: "MATIC",
+                    name: VITE_NATIVE_CURRENCY_NAME,
+                    symbol: VITE_NATIVE_CURRENCY_SYMBOL,
                     decimals: 18
                 },
-                blockExplorerUrls: ["https://mumbai.polygonscan.com/"]
+                blockExplorerUrls: [VITE_BLOCK_EXPLORER_URL]
               },
             ],
           });

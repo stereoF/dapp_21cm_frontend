@@ -190,7 +190,7 @@ async function prepare(startIndex, endIndex) {
 }
 
 
-prepare(1, 10);
+prepare(0, 10);
 
 
 
