@@ -15,6 +15,11 @@
 
 <script lang="ts" setup>
 import Header from './components/Header.vue'
+
+if (!window.ethereum) {
+  // If window.ethereum is not found then MetaMask is not installed
+  alert('MetaMask is not installed. Please install it to use this app: https://metamask.io/download.html');
+}
 </script>
 
 <style scoped>
