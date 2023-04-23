@@ -24,7 +24,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
     let processIndex: number = process.processStatus;
 
     let reviewerCnt = reviewers.length;
-    let reviewersReviewInfo = reviewers.map(async (reviewer: string, index: number) => {
+    let reviewInfo = reviewers.map(async (reviewer: string, index: number) => {
         return {
             reviewer: reviewer,
             ...await (contract.deSciReviews(paperCID, reviewer)),
@@ -34,13 +34,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
         // }
     });
 
-    let editor = process.editor;
-    let editorReviewInfo = {
-        reviewer: editor,
-        ...await (contract.deSciReviews(paperCID, editor)),
-    }
-
-    let reviewInfo = reviewersReviewInfo.concat(editorReviewInfo);
+    // let reviewInfo = reviewersReviewInfo.concat(editorReviewInfo);
 
     let reviseCnt = 0;
     let passCnt = 0;
@@ -92,6 +86,38 @@ export async function usePaperInfo(address: string, paperCID: string) {
             }
         )
     }
+
+    if (processIndex == 2){
+        reviewInfo = await contract.deSciReviews(paperCID, process.editor);
+        reviewResultShow.push(
+            {
+                name: process.editor,
+                obj: [
+                    {
+                        label: "comment",
+                        value: reviewInfo.comment,
+                    },
+                    {
+                        label: "reply",
+                        value: reviewInfo.reply,
+                    },
+                    {
+                        label: "reviewerStatus",
+                        value: ReviewerStatus[reviewInfo.reviewerStatus],
+                    },
+                    {
+                        label: "commentTime",
+                        value: reviewInfo.commentTime != 0 ? new Date(reviewInfo.commentTime * 1000).toLocaleString() : '',
+                    },
+                    {
+                        label: "replyTime",
+                        value: reviewInfo.replyTime != 0 ? new Date(reviewInfo.replyTime * 1000).toLocaleString() : '',
+                    },
+                ]
+            }
+        );
+    };
+
 
     reviewers = reviewers ? reviewers : [];
     let status = ProcessStatus[processIndex];
