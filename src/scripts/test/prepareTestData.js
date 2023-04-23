@@ -101,7 +101,10 @@ async function assignEditors() {
 async function submit(paperCID) {
 
     const minGasCost = await deSciContract.gasFee(0);
-    const donateAmount = ethers.utils.parseEther('0.0005', 'ether');
+    const minDonate = await deSciContract.gasFee(4);
+    // console.log('minDonate: ', minDonate.toString(), 'ether');
+    // const donateAmount = ethers.utils.parseEther('0.1', 'ether');
+    const donateAmount = minDonate
     let title = `Test Paper Title: ${paperCID}`;
     console.log('title: ', title)
 
@@ -164,7 +167,7 @@ async function reviewPrint(paperCID, reviewerSigner, comment, choice) {
 async function prepare(startIndex, endIndex) {
 
 
-    await assignEditors();
+    // await assignEditors();
 
     for (let i = startIndex; i < endIndex; i++) {
         paperCID = 'paperCID_' + i;
@@ -172,25 +175,25 @@ async function prepare(startIndex, endIndex) {
         await submitPrePrint(paperCID);
     };
 
-    setTimeout(async () => {
-        for (let i = startIndex; i < endIndex; i++) {
-            paperCID = 'paperCID_' + i;
-            await assignReviewers(paperCID);
-        }
-    }, 10000);
+    // setTimeout(async () => {
+    //     for (let i = startIndex; i < endIndex; i++) {
+    //         paperCID = 'paperCID_' + i;
+    //         await assignReviewers(paperCID);
+    //     }
+    // }, 10000);
 
-    setTimeout(async () => {
-        for (let i = startIndex; i < endIndex; i++) {
-            paperCID = 'paperCID_' + i;
-            await reviewPrint(paperCID, reviewer1Signer, 'reviewer1', 3);
-            await reviewPrint(paperCID, reviewer2Signer, 'reviewer2', 3);
-        }
-    }, 20000);
+    // setTimeout(async () => {
+    //     for (let i = startIndex; i < endIndex; i++) {
+    //         paperCID = 'paperCID_' + i;
+    //         await reviewPrint(paperCID, reviewer1Signer, 'reviewer1', 3);
+    //         await reviewPrint(paperCID, reviewer2Signer, 'reviewer2', 3);
+    //     }
+    // }, 20000);
 
 }
 
 
-prepare(0, 10);
+prepare(5, 10);
 
 
 

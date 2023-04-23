@@ -24,7 +24,7 @@
                     <ManagerFields field-name="Reviewer" :fields="reviewers.map((reviewer: any) => ({ field: reviewer }))"
                         @submit="contractCall" />
                 </a-tab-pane>
-                <a-tab-pane key="2" title="Reject or Pass">
+                <a-tab-pane key="2" title="Reject">
                     <div class="container">
                         <div class="file-upload-container">
                             <a-col :offset="8">
@@ -32,7 +32,7 @@
                             </a-col>
                         </div>
                         <Suspense>
-                            <SubmitCommentCID :address="$props.address" :paperCID="$props.paperCID" disable-revise/>
+                            <EditorReject :address="$props.address" :paperCID="$props.paperCID" />
                             <template #fallback>
                                 <a-space size="large">
                                     <a-spin :size="32" />
@@ -53,7 +53,8 @@ import { Notification } from '@arco-design/web-vue';
 import { IconExclamationCircleFill } from '@arco-design/web-vue/es/icon';
 import DeSciPrint from "@/contracts/desci/DeSciPrint.json";
 import ManagerFields from '@/components/ManagerFields.vue';
-import SubmitCommentCID from '../SubmitCommentCID.vue';
+// import SubmitCommentCID from '../SubmitCommentCID.vue';
+import EditorReject from './EditorReject.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import PaperInfo from '@/pages/deSci/PaperInfo.vue';
 import { useProvider } from '@/scripts/ethProvider';
@@ -138,7 +139,7 @@ export default defineComponent({
             process
         };
     },
-    components: { ManagerFields, PaperInfo, IconExclamationCircleFill, SubmitCommentCID, FileUpload }
+    components: { ManagerFields, PaperInfo, IconExclamationCircleFill, EditorReject, FileUpload }
 })
 
 </script>

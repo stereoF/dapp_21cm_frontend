@@ -24,7 +24,7 @@ export async function usePaperInfo(address: string, paperCID: string) {
     let processIndex: number = process.processStatus;
 
     let reviewerCnt = reviewers.length;
-    let reviewInfo = reviewers.map(async (reviewer: string, index: number) => {
+    let reviewersReviewInfo = reviewers.map(async (reviewer: string, index: number) => {
         return {
             reviewer: reviewer,
             ...await (contract.deSciReviews(paperCID, reviewer)),
@@ -32,7 +32,15 @@ export async function usePaperInfo(address: string, paperCID: string) {
         // return {
         //   reviewer: await contract.deSciReviews(paperCID, reviewer),
         // }
-    })
+    });
+
+    let editor = process.editor;
+    let editorReviewInfo = {
+        reviewer: editor,
+        ...await (contract.deSciReviews(paperCID, editor)),
+    }
+
+    let reviewInfo = reviewersReviewInfo.concat(editorReviewInfo);
 
     let reviseCnt = 0;
     let passCnt = 0;
